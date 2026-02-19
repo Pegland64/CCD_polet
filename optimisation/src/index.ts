@@ -17,7 +17,7 @@ console.log('=== RÉSULTATS GLOUTON ===');
 for (const abonne of result) {
     const box = abonne.box;
 
-    console.log(`\n📦 Box de ${abonne.prenom} (${abonne.ageEnfant})`);
+    console.log(`\n Box de ${abonne.prenom} (${abonne.ageEnfant})`);
     console.log(`   Préférences : ${abonne.preferences.join(', ')}`);
     console.log(`   Articles    :`);
     for (const article of box.articles) {
