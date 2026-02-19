@@ -16,4 +16,4 @@ COPY --chown=node:node src/ ./src/
 # We use the default 'node' user for security
 USER node
 
-CMD ["tsx", "src/poc.ts"]
+CMD ["tsx", "src/index.ts"]
