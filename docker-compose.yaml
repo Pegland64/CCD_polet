@@ -1,4 +1,19 @@
 services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=crazy_charly
+    networks:
+      - crazy-charly.net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d crazy_charly" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   crazy-charly-web:
     platform: linux/amd64
     build:
@@ -6,7 +21,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:3000
-
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - ./crazy-charly-web:/app:delegated
       - crazy-charly-web-node-modules:/app/node_modules
@@ -15,11 +32,6 @@ services:
       - crazy-charly.net
     environment:
       - PORT=3000
-    command: >
-      sh -c "
-        npm install &&
-        npm run dev -- -H 0.0.0.0
-      "
     restart: unless-stopped
 
 networks:
