@@ -1,0 +1,31 @@
+services:
+  crazy-charly-web:
+    platform: linux/amd64
+    build:
+      context: ./crazy-charly-web
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+
+    volumes:
+      - ./crazy-charly-web:/app:delegated
+      - crazy-charly-web-node-modules:/app/node_modules
+      - crazy-charly-next:/app/.next
+    networks:
+      - crazy-charly.net
+    environment:
+      - PORT=3000
+    command: >
+      sh -c "
+        npm install &&
+        npm run dev -- -H 0.0.0.0
+      "
+    restart: unless-stopped
+
+networks:
+  crazy-charly.net:
+    driver: bridge
+
+volumes:
+  crazy-charly-web-node-modules:
+  crazy-charly-next:
