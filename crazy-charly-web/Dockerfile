@@ -10,6 +10,7 @@ RUN apk add --no-cache openssl libc6-compat netcat-openbsd
 
 COPY package*.json ./
 RUN npm install
+RUN npm install next-auth@beta
 
 # Linting et formatage (optionnel pour CI/CD)
 # RUN npm run lint && npm run format
