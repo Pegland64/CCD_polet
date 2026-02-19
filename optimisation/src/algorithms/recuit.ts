@@ -45,7 +45,7 @@ export function recuit(abonnes: Abonne[], articles: Article[], wmax: number): Ab
     const coolingRate = 0.995;
 
     while(temperature > 0.1) {
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 1000; i++) {
             const candidate = cloneSolution(solution);
             genererVoisin(candidate, wmax);
 
