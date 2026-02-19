@@ -1,0 +1,124 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Categorie {
+  SOC  // Jeux de société
+  FIG  // Figurines et poupées
+  CON  // Jeux de construction
+  EXT  // Jeux d'extérieur
+  EVL  // Jeux d'éveil et éducatifs
+  LIV  // Livres jeunesse
+}
+
+enum TrancheAge {
+  BB  // 0-3 ans (bébé)
+  PE  // 3-6 ans (petit enfant)
+  EN  // 6-10 ans (enfant)
+  AD  // 10+ ans (adolescent)
+}
+
+enum Etat {
+  N   // Neuf
+  TB  // Très bon état
+  B   // Bon état
+}
+
+enum StatutArticle {
+  DISPONIBLE  // Article disponible pour composition
+  EN_ATTENTE  // Article assigné à une box non validée
+  VALIDE      // Article validé dans une box
+}
+
+enum StatutCampagne {
+  BROUILLON   // Campagne créée
+  COMPOSEE    // Boxes composées (optimisation terminée)
+  VALIDEE     // Campagne validée
+}
+
+// ============================================
+// MODELS
+// ============================================
+
+model Article {
+  id          String        @id @default(uuid())
+  designation String
+  categorie   Categorie
+  trancheAge  TrancheAge
+  etat        Etat
+  prix        Int
+  poids       Int
+  statut      StatutArticle @default(DISPONIBLE)
+  
+  // Relation avec Box
+  boxId       String?
+  box         Box?          @relation(fields: [boxId], references: [id], onDelete: SetNull)
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("articles")
+}
+
+model Abonne {
+  id               String     @id @default(uuid())
+  nom              String
+  prenom           String
+  email            String     @unique
+  trancheAgeEnfant TrancheAge
+  preferences      String
+  
+  // Relation avec Box
+  boxes            Box[]
+  
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@map("abonnes")
+}
+
+model Campagne {
+  id          String          @id @default(uuid())
+  nom         String
+  poidsMax    Int
+  statut      StatutCampagne  @default(BROUILLON)
+  totalScore  Int?
+  
+  // Relation avec Box
+  boxes       Box[]
+  
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("campagnes")
+}
+
+model Box {
+  id         String   @id @default(uuid())
+  score      Int
+  poidsTotal Int
+  prixTotal  Int
+  
+  // Relations
+  campagneId String
+  campagne   Campagne @relation(fields: [campagneId], references: [id], onDelete: Cascade)
+  
+  abonneId   String
+  abonne     Abonne   @relation(fields: [abonneId], references: [id], onDelete: Cascade)
+  
+  articles   Article[]
+  
+  createdAt  DateTime @default(now())
+
+  @@map("boxes")
+}
