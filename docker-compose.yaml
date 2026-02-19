@@ -3,9 +3,13 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=crazy_charly
+      - POSTGRES_USER_FILE=/run/secrets/db_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+      - POSTGRES_DB_FILE=/run/secrets/db_name
+    secrets:
+      - db_user
+      - db_password
+      - db_name
     networks:
       - crazy-charly.net
     healthcheck:
@@ -33,6 +37,10 @@ services:
     environment:
       - PORT=3000
     restart: unless-stopped
+    secrets:
+      - db_user
+      - db_password
+      - db_name
 
 networks:
   crazy-charly.net:
@@ -41,3 +49,14 @@ networks:
 volumes:
   crazy-charly-web-node-modules:
   crazy-charly-next:
+
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  db_password:
+    file: ./secrets/db_password.txt
+  db_user:
+    file: ./secrets/db_user.txt
+  db_name:
+    file: ./secrets/db_name.txt
