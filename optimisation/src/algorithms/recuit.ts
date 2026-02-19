@@ -1,8 +1,8 @@
-import {Abonne} from "../models/Abonne";
-import {Article} from "../models/Article";
-import {peutAjouter} from "../core/validator";
-import {calculerScoreTotal} from "../core/scoring";
-import {glouton} from "./glouton";
+import { Abonne } from "../models/Abonne";
+import { Article } from "../models/Article";
+import { peutAjouter } from "../core/validator";
+import { calculerScoreTotal } from "../core/scoring";
+import { glouton } from "./glouton";
 
 function cloneSolution(abonnes: Abonne[]): Abonne[] {
     return abonnes.map(ab => {
@@ -12,12 +12,12 @@ function cloneSolution(abonnes: Abonne[]): Abonne[] {
     });
 }
 
-function genererVoisin(abonnes: Abonne[], wmax: number):void  {
-    if(abonnes.length < 2)return;
+function genererVoisin(abonnes: Abonne[], wmax: number): void {
+    if (abonnes.length < 2) return;
     const sourceIndex = Math.floor(Math.random() * abonnes.length);
     const source = abonnes[sourceIndex];
 
-    if(source.box.articles.length === 0) return;
+    if (source.box.articles.length === 0) return;
 
     const articleIndex = Math.floor(Math.random() * source.box.articles.length);
     const article = source.box.articles[articleIndex];
@@ -27,7 +27,7 @@ function genererVoisin(abonnes: Abonne[], wmax: number):void  {
 
     const destination = abonnes[destinationIndex];
 
-    if(!peutAjouter(destination,article,wmax))return;
+    if (!peutAjouter(destination, article, wmax)) return;
 
     source.box.articles.splice(articleIndex, 1);
     destination.box.ajouterArticle(article);
@@ -44,7 +44,7 @@ export function recuit(abonnes: Abonne[], articles: Article[], wmax: number): Ab
     let temperature = 100;
     const coolingRate = 0.995;
 
-    while(temperature > 0.1) {
+    while (temperature > 0.1) {
         for (let i = 0; i < 1000; i++) {
             const candidate = cloneSolution(solution);
             genererVoisin(candidate, wmax);

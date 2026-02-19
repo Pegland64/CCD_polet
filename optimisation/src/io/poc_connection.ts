@@ -1,9 +1,9 @@
 import { createPool } from "mariadb";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { Article } from "../models/Article.js";
-import { Abonne } from "../models/Abonne.js";
-import { Categorie, TrancheAge, Etat } from "../models/types.js";
+import { Article } from "../models/Article";
+import { Abonne } from "../models/Abonne";
+import { Categorie, TrancheAge, Etat } from "../models/types";
 
 const readSecret = (secretPath: string, defaultValue: string): string => {
     try {

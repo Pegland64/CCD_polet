@@ -1,11 +1,11 @@
 import { parseCSV } from './io/csvParser';
-import {glouton} from "./algorithms/glouton";
-import {calculerScoreTotal} from "./core/scoring";
-import {binPacking} from "./algorithms/binPacking";
-import {Abonne} from "./models/Abonne";
-import {Article} from "./models/Article";
-import {recuit} from "./algorithms/recuit";
-import {writeCSV} from "./io/csvWriter";
+import { glouton } from "./algorithms/glouton";
+import { calculerScoreTotal } from "./core/scoring";
+import { binPacking } from "./algorithms/binPacking";
+import { Abonne } from "./models/Abonne";
+import { Article } from "./models/Article";
+import { recuit } from "./algorithms/recuit";
+import { writeCSV } from "./io/csvWriter";
 
 const { articles, abonnes, budgetMax } = parseCSV('../../input_csv/03_pb_complexes/pb7.csv');
 

@@ -1,10 +1,10 @@
-import {Article} from "./Article";
-import {Abonne} from "./Abonne";
+import { Article } from "./Article";
+import { Abonne } from "./Abonne";
 
 export class Box {
     public articles: Article[] = [];
 
-    constructor(public readonly proprietaire: Abonne) {}
+    constructor(public readonly proprietaire: Abonne) { }
 
     ajouterArticle(article: Article): void {
         this.articles.push(article);

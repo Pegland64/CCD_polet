@@ -1,11 +1,11 @@
-import {Article} from "../models/Article";
-import {Abonne} from "../models/Abonne";
-import {peutAjouter} from "../core/validator";
-import {getScoreArticle} from "../core/scoring";
+import { Article } from "../models/Article";
+import { Abonne } from "../models/Abonne";
+import { peutAjouter } from "../core/validator";
+import { getScoreArticle } from "../core/scoring";
 console.log("GLLOUTON LOADED");
 export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): Abonne[] {
     const remaining = [...articles]; // Copie de la liste des articles
-    while(true){
+    while (true) {
         let bestMove: { abIndex: number, artIndex: number, gain: number } | null = null;
 
         for (let i = 0; i < remaining.length; i++) {
@@ -22,7 +22,7 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
 
                 if (gain === null) continue;
 
-                if(!bestMove || gain > bestMove.gain){
+                if (!bestMove || gain > bestMove.gain) {
                     bestMove = { abIndex: j, artIndex: i, gain };
                 }
             }

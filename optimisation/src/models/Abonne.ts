@@ -1,5 +1,5 @@
-import {Article} from "./Article";
-import {AGE_TRANCHES, Categorie, TrancheAge} from "./types";
+import { Article } from "./Article";
+import { AGE_TRANCHES, Categorie, TrancheAge } from "./types";
 import { Box } from './Box';
 
 export class Abonne {

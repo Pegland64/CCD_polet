@@ -9,5 +9,5 @@ export class Article {
         public readonly etat: Etat,             // ex: "N"
         public readonly prix: number,           // en euros (entier)
         public readonly poids: number           // en grammes (entier)
-    ) {}
+    ) { }
 }

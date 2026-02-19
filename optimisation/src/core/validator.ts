@@ -1,8 +1,6 @@
 import { Abonne } from '../models/Abonne';
 import { Article } from '../models/Article';
-import { TrancheAge } from '../models/types';
-
-const AGE_TRANCHES: TrancheAge[] = ["BB", "PE", "EN", "AD"];
+import { AGE_TRANCHES } from "../models/types";
 
 /**
  * Résultat de la validation d'une composition.

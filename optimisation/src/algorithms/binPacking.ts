@@ -1,7 +1,7 @@
-import {Abonne} from "../models/Abonne";
-import {Article} from "../models/Article";
-import {peutAjouter} from "../core/validator";
-import {calculerScoreTotal} from "../core/scoring";
+import { Abonne } from "../models/Abonne";
+import { Article } from "../models/Article";
+import { peutAjouter } from "../core/validator";
+import { calculerScoreTotal } from "../core/scoring";
 
 export function binPacking(abonnes: Abonne[], articles: Article[], wmax: number): Abonne[] {
     const sortedArticles = [...articles].sort((a, b) => b.poids - a.poids);

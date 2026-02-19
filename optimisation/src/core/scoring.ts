@@ -1,6 +1,6 @@
 import { Abonne } from '../models/Abonne';
 import { Article } from '../models/Article';
-import { Categorie, Etat, TrancheAge } from '../models/types';
+import { AGE_TRANCHES, Categorie, Etat, TrancheAge } from '../models/types';
 
 /**
  * Table de correspondance rang de préférence → points (Règle 4)
@@ -12,8 +12,6 @@ const POINTS_PAR_RANG: number[] = [10, 8, 6, 4, 2, 1];
  * Bonus par état (Règle 5)
  */
 const BONUS_ETAT: Record<Etat, number> = { N: 2, TB: 1, B: 0 };
-
-const AGE_TRANCHES: TrancheAge[] = ["BB", "PE", "EN", "AD"];
 
 /**
  * Retourne le facteur de pénalité d'âge entre un article et un abonné.
