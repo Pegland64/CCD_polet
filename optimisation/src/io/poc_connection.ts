@@ -60,7 +60,8 @@ export async function getArticles(): Promise<Article[]> {
         const res = await client.query(
             `SELECT id, designation, categorie, "trancheAge", etat, prix, poids
              FROM articles
-             WHERE statut = 'DISPONIBLE'`
+             WHERE (statut = 'DISPONIBLE' OR statut = 'EN_ATTENTE')
+             AND "boxId" IS NULL`
         );
         return res.rows.map((row: any) => new Article(
             row.id,

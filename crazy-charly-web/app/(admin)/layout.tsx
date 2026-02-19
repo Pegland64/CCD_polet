@@ -3,6 +3,15 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import Header from "@/components/Header";
 import BottomTabBar from "@/components/BottomTabBar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Back-Office | Toys Academy",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
 
 export default async function AdminLayout({
     children,

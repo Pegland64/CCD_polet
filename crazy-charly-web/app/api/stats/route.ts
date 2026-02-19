@@ -5,9 +5,9 @@ export async function GET() {
     try {
         const [totalArticles, totalAbonnes, articles, campaigns] = await Promise.all([
             prisma.article.count(),
-            prisma.utilisateur.count(),
+            prisma.utilisateur.count({ where: { role: 'abonne' } }),
             prisma.article.findMany({ select: { categorie: true, etat: true, trancheAge: true } }),
-            prisma.campagne.findMany({ select: { totalScore: true }, where: { statut: 'VALIDEE' } }),
+            prisma.campagne.findMany({ select: { totalScore: true }, where: { statut: { in: ['COMPOSEE', 'VALIDEE'] } } }),
         ]);
 
         // Calculate score mean

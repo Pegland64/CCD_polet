@@ -18,6 +18,9 @@ done
 
 echo "--- Database is ready! ---"
 
+echo "--- Installing dependencies ---"
+npm install
+
 echo "--- Generating Prisma Client ---"
 npx prisma@5 generate
 

@@ -1,6 +1,9 @@
 import { Pool } from 'pg';
 import { Abonne } from '../models/Abonne';
-import { calculerScoreBox } from '../core/scoring';
+import { Article } from '../models/Article';
+import { Categorie, TrancheAge, Etat } from '../models/types';
+import { calculerScoreBox, calculerScoreTotal } from '../core/scoring';
+import { getAbonnes } from './poc_connection';
 
 /**
  * Insère les boxes et leurs articles dans la base de données.
@@ -28,12 +31,9 @@ export async function saveBoxesToDB(
         for (const abonne of abonnes) {
             const box = abonne.box;
 
-            // Ne pas insérer les boxes vides
-            if (box.articles.length === 0) continue;
-
-            const score      = calculerScoreBox(abonne);
+            const score = calculerScoreBox(abonne);
             const poidsTotal = box.getPoidsTotal();
-            const prixTotal  = box.getPrixTotal();
+            const prixTotal = box.getPrixTotal();
 
             // 1. Insérer la box
             const resBox = await client.query<{ id: string }>(
@@ -68,6 +68,64 @@ export async function saveBoxesToDB(
     } catch (err) {
         await client.query('ROLLBACK');
         console.error('Erreur lors de l\'enregistrement des boxes, rollback effectué :', err);
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
+/**
+ * Finalise une campagne : calcule le score global et passe le statut à 'COMPOSEE'.
+ */
+export async function finalizeCampaignInDB(
+    campagneId: string,
+    pool: Pool
+): Promise<void> {
+    const client = await pool.connect();
+    try {
+        console.log(`[FINALIZE] Calcul du score global pour la campagne ${campagneId}...`);
+
+        // 1. Récupérer TOUS les abonnés
+        const abonnes = await getAbonnes();
+
+        // 2. Reconstituer les boxes pour chaque abonné dans cette campagne
+        for (const abonne of abonnes) {
+            const resArticles = await client.query(
+                `SELECT a.id, a.designation, a.categorie, a."trancheAge", a.etat, a.prix, a.poids
+                 FROM articles a
+                 JOIN boxes b ON a."boxId" = b.id
+                 WHERE b."campagneId" = $1 AND b."utilisateurId" = $2`,
+                [campagneId, abonne.id]
+            );
+
+            for (const row of resArticles.rows) {
+                abonne.box.ajouterArticle(new Article(
+                    row.id,
+                    row.designation,
+                    row.categorie as Categorie,
+                    row["trancheAge"] as TrancheAge,
+                    row.etat as Etat,
+                    Number(row.prix),
+                    Number(row.poids)
+                ));
+            }
+        }
+
+        // 3. Calculer le score global (avec malus)
+        const totalScore = calculerScoreTotal(abonnes);
+
+        // 4. Mettre à jour la campagne
+        await client.query(
+            `UPDATE campagnes
+             SET statut = 'COMPOSEE', "totalScore" = $1, "updatedAt" = NOW()
+             WHERE id = $2`,
+            [totalScore, campagneId]
+        );
+
+        console.log(`Campagne ${campagneId} finalisée. Status: COMPOSEE, Score: ${totalScore}`);
+
+    } catch (err) {
+        console.error('Erreur lors de la finalisation de la campagne :', err);
         throw err;
     } finally {
         client.release();

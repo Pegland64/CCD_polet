@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/campaigns/[id]/boxes — Affichage des box composées d'une campagne (admin)
+// GET /api/campaigns/[id]/boxes — Affichage des box composées (point 11)
+// Retourne toutes les boxes avec leurs articles, scores, poids/prix total
+// et inclut le statut de chaque article pour détecter les boxes déjà validées
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -31,10 +33,11 @@ export async function GET(
             etat: true,
             prix: true,
             poids: true,
+            statut: true,   // ← nécessaire pour détecter si la box est déjà validée (point 12)
           },
         },
       },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { score: 'desc' }, // trié par score décroissant (meilleur en premier)
     });
 
     return NextResponse.json({
@@ -48,6 +51,7 @@ export async function GET(
       boxes,
     });
   } catch (error) {
+    console.error('GET /api/campaigns/[id]/boxes', error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

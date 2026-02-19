@@ -43,6 +43,7 @@ const StepIndicator = ({ currentStep }: { currentStep: string }) => {
 
 export default function LandingPage() {
     const [isLoading, setIsLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
     const [view, setView] = useState<"HERO" | "AGE" | "SELECTION">("HERO");
     const [selectedAge, setSelectedAge] = useState<string | null>(null);
     const [boxSlots, setBoxSlots] = useState<(typeof CATEGORIES[0] | null)[]>([null, null, null, null, null, null]);
@@ -52,6 +53,7 @@ export default function LandingPage() {
     const router = useRouter();
 
     useEffect(() => {
+        setMounted(true);
         const timer = setTimeout(() => setIsLoading(false), 1800);
         return () => clearTimeout(timer);
     }, []);
@@ -137,7 +139,13 @@ export default function LandingPage() {
             <StepIndicator currentStep={view} />
 
             {/* Login Overlay */}
-            <div className="fixed top-6 right-6 z-50">
+            <div className="fixed top-6 right-6 z-50 flex items-center gap-2">
+                <Link
+                    href="/ma-box"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-white/40 backdrop-blur-xl border border-white/60 text-[#131445] font-bold text-sm rounded-2xl hover:bg-white/60 transition-all active:scale-95 shadow-sm"
+                >
+                    Ma Box
+                </Link>
                 <Link
                     href="/connexion"
                     className="flex items-center gap-2 px-5 py-2.5 bg-white/40 backdrop-blur-xl border border-white/60 text-[#131445] font-bold text-sm rounded-2xl hover:bg-white/60 transition-all active:scale-95 shadow-sm"
@@ -231,7 +239,7 @@ export default function LandingPage() {
                     </motion.section>
                 )}
 
-                {view === "AGE" && (
+                {mounted && view === "AGE" && (
                     <motion.section
                         key="age"
                         initial={{ opacity: 0, x: "100%" }}
@@ -242,14 +250,14 @@ export default function LandingPage() {
                     >
                         <motion.h2
                             initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -20] }}
-                            transition={{ duration: 4, times: [0, 0.15, 0.85, 1], ease: "easeInOut" }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
                             className="text-3xl font-display font-bold mb-8 text-[#4c40cf] text-center mt-20"
                         >
                             Quel âge a l'enfant ?
                         </motion.h2>
 
-                        <div className="grid grid-cols-2 gap-4 w-full max-md pb-8">
+                        <div className="grid grid-cols-2 gap-4 w-full max-w-sm mx-auto pb-8">
                             {AGE_GROUPS.map((group) => (
                                 <motion.button
                                     key={group.id}

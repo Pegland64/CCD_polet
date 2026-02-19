@@ -3,7 +3,7 @@ import { Article } from '../models/Article';
 import { Categorie, Etat } from '../models/types';
 
 /**
- * Table de correspondance rang de préférence → points (Règle 4)
+ * Table de correspondance rang de préférence   points (Règle 4)
  * Index 0 = 1er rang (10 pts), Index 5 = 6ème rang (1 pt)
  */
 const POINTS_PAR_RANG: number[] = [10, 8, 6, 4, 2, 1];
@@ -38,7 +38,7 @@ export function getBonusEtat(article: Article): number {
 export function getScoreArticle(abonne: Abonne, article: Article, dejaMemeCategorie: number = 0): number {
     const rang = abonne.preferences.indexOf(article.categorie);
     const rangEffectif = rang === -1 ? 6 : rang + dejaMemeCategorie; // décalage Règle 6
-    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;          // au-delà du 6ème → 1 pt
+    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;          // au-delà du 6ème   1 pt
     return pointsPref + getBonusEtat(article);
 }
 
@@ -82,7 +82,7 @@ export function calculerMalusEquite(abonnes: Abonne[]): number {
 
 /**
  * Calcule le malus "tout le monde est servi" (Règle 7).
- * Chaque abonné avec une box vide → malus de -10.
+ * Chaque abonné avec une box vide   malus de -10.
  */
 export function calculerMalusBoxVide(abonnes: Abonne[]): number {
     let malus = 0;

@@ -1,7 +1,8 @@
 import { getAbonnes, getArticles, getCampagneEnBrouillon, pool } from './io/poc_connection';
 import { glouton } from './algorithms/glouton';
 import { calculerScoreBox } from './core/scoring';
-import { saveBoxesToDB } from './io/dbWriter';
+import { saveBoxesToDB, finalizeCampaignInDB } from './io/dbWriter';
+import { writeCSV } from './io/csvWriter';
 import { Abonne } from './models/Abonne';
 
 // ─── Paramètres ────────────────────────────────────────────────────────────
@@ -103,7 +104,8 @@ async function runOptimizationCycle() {
         }
 
         if (abonnesSansBox.length === 0) {
-            console.log('Tous les abonnés de la campagne ont déjà une box. En attente de nouveaux inscrits...');
+            console.log('Tous les abonnés de la campagne ont déjà une box. Finalisation de la campagne...');
+            await finalizeCampaignInDB(campagne.id, pool);
             return;
         }
 
@@ -115,7 +117,11 @@ async function runOptimizationCycle() {
         // 5. Enregistrement
         await saveBoxesToDB(abonnesSansBox, campagne.id, pool);
 
-        // 6. Affichage (optionnel)
+        // 6. CSV Export (optional but requested by subject)
+        const csvPath = `/output_csv/composition_${campagne.id}_${Date.now()}.csv`;
+        writeCSV(abonnesSansBox, csvPath);
+
+        // 7. Affichage (optionnel)
         afficherBoxes(abonnesSansBox);
 
     } catch (err) {
@@ -123,7 +129,15 @@ async function runOptimizationCycle() {
     }
 }
 
-// Lancement du polling
-console.log(`Service d'optimisation démarré (Polling tous les ${POLLING_INTERVAL_MS / 1000}s)`);
-setInterval(runOptimizationCycle, POLLING_INTERVAL_MS);
-runOptimizationCycle(); // Premier lancement immédiat
+// Lancement du polling séquentiel pour éviter les chevauchements
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function mainLoop() {
+    console.log(`Service d'optimisation démarré (Polling toutes les ${POLLING_INTERVAL_MS / 1000}s)`);
+    while (true) {
+        await runOptimizationCycle();
+        await sleep(POLLING_INTERVAL_MS);
+    }
+}
+
+mainLoop();

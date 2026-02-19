@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CATEGORY_LABELS } from "@/lib/constants";
 import { motion } from "framer-motion";
 import {
@@ -10,16 +11,22 @@ import {
     Sparkles,
     ArrowUpRight,
     Loader2,
-    Users
+    Users,
+    History,
+    ChevronRight,
+    Star
 } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { useApiData } from "@/hooks/useApiData";
-import { DashboardStats } from "@/lib/types";
+import { DashboardStats, Campaign } from "@/lib/types";
 
 export default function AdminDashboardPage() {
     const { data: stats, isLoading } = useApiData<DashboardStats>({
         baseUrl: '/api/stats'
+    });
+    const { data: campaigns } = useApiData<Campaign[]>({
+        baseUrl: '/api/campaigns',
     });
 
     if (isLoading || !stats) return <DashboardLoading />;
@@ -50,7 +57,7 @@ export default function AdminDashboardPage() {
                     <Card variant="dark" className="p-5 md:p-6 overflow-hidden relative shadow-xl shadow-brand/10">
                         <span className="relative z-10 text-[9px] font-black uppercase text-white/30 tracking-widest block mb-1">Qualité moyenne</span>
                         <div className="relative z-10 flex items-baseline gap-1">
-                            <span className="text-3xl md:text-4xl font-black text-white">{stats.scoreMoyen}%</span>
+                            <span className="text-3xl md:text-4xl font-black text-white">{stats.scoreMoyen}</span>
                         </div>
                         <div className="absolute top-0 right-0 w-32 h-32 bg-brand/20 blur-3xl -mr-16 -mt-16" />
                     </Card>
@@ -144,6 +151,55 @@ export default function AdminDashboardPage() {
                         </Card>
                     </div>
                 </div>
+
+                {/* --- HISTORIQUE GLOBAL --- */}
+                {campaigns && campaigns.length > 0 && (
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <History size={16} className="text-brand" />
+                                <h3 className="font-bold text-text-primary">Historique des Campagnes</h3>
+                            </div>
+                            <Link href="/admin/campagnes" className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                                Tout voir <ChevronRight size={12} />
+                            </Link>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {campaigns.slice(0, 3).map(camp => (
+                                <Link key={camp.id} href={`/admin/campagnes/${camp.id}`}>
+                                    <Card variant="white" className="p-5 hover:shadow-md transition-all cursor-pointer group active:scale-[0.98] border border-[#131445]/5">
+                                        <div className="flex items-start justify-between mb-3">
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${camp.statut === 'VALIDEE' ? 'bg-green-100 text-green-600' :
+                                                    camp.statut === 'COMPOSEE' ? 'bg-brand/10 text-brand' :
+                                                        'bg-orange-100 text-orange-500'
+                                                }`}>
+                                                {camp.statut === 'BROUILLON'
+                                                    ? <Loader2 size={14} className="animate-spin" />
+                                                    : <History size={14} />}
+                                            </div>
+                                            <ChevronRight size={14} className="text-text-primary/20 group-hover:text-brand transition-colors" />
+                                        </div>
+                                        <p className="font-bold text-text-primary text-sm truncate mb-1">{camp.nom}</p>
+                                        <p className="text-[10px] text-text-primary/30 font-bold">
+                                            {new Date(camp.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                        </p>
+                                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-text-primary/5">
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-text-primary/20">{camp._count?.boxes ?? 0} boxes</span>
+                                            {camp.totalScore !== null ? (
+                                                <span className="flex items-center gap-1 text-xs font-black text-brand">
+                                                    <Star size={10} className="fill-amber-400 text-amber-400" />
+                                                    {camp.totalScore}
+                                                </span>
+                                            ) : (
+                                                <span className="text-[9px] font-bold text-orange-400">En cours…</span>
+                                            )}
+                                        </div>
+                                    </Card>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -37,6 +37,10 @@ export interface Campaign {
     _count?: {
         boxes: number;
     };
+    // Données de synthèse historique (point 15)
+    totalArticlesConcernes?: number;
+    totalArticlesDistribues?: number;
+    scoreMoyen?: number | null;
 }
 
 export interface BoxResult {

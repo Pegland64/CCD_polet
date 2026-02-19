@@ -7,13 +7,7 @@ COPY package*.json ./
 
 # Installation des dépendances
 RUN apk add --no-cache openssl libc6-compat netcat-openbsd
-
-COPY package*.json ./
 RUN npm install
-RUN npm install next-auth@beta
-
-# Linting et formatage (optionnel pour CI/CD)
-# RUN npm run lint && npm run format
 
 # Copie du code source
 COPY . .
@@ -30,9 +24,8 @@ ENV DATABASE_URL=postgresql://app_user:password@db:5432/crazy_charly_db?schema=p
 
 # Script d'initialisation
 COPY entrypoint.sh /usr/local/bin/
-#RUN chmod +x /usr/local/bin/entrypoint.sh
-RUN chmod +x ./entrypoint.sh
-
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Démarrage en mode développement
 CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0"]
