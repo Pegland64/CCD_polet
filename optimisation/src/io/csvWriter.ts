@@ -11,7 +11,7 @@ export function writeCSV(abonnes: Abonne[], outputPath: string): void {
 
     for (const abonne of abonnes) {
         for (const article of abonne.box.articles) {
-            lignes.push(`${article.id};${abonne.id}`);
+            lignes.push(`${abonne.prenom};${article.id};${article.categorie};${article.age};${article.etat}`);
         }
     }
 
