@@ -1,4 +1,5 @@
 import { parseCSV } from './io/csvParser';
+import { poc } from './io/poc';
 
 const { articles, abonnes, budgetMax } = parseCSV('../input_csv/01_exemple/exemple.csv');
 
@@ -14,3 +15,8 @@ for (const abonne of abonnes) {
 
 console.log('\n=== PARAMÈTRES ===');
 console.log(`Budget max : ${budgetMax}€`);
+
+console.log('\n=== APPEL POC ===');
+// Appel io/poc.ts pour tester le code
+poc(abonnes, articles, budgetMax);
+
