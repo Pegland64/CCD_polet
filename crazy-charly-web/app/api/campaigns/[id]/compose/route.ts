@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // Génère le CSV au format attendu par le service d'optimisation
 function genererCSV(
   articles: { id: string; designation: string; categorie: string; trancheAge: string; etat: string; prix: number; poids: number }[],
-  abonnes: { id: string; prenom: string; trancheAgeEnfant: string; preferences: string }[],
+  utilisateurs: { id: string; prenom: string | null; trancheAgeEnfant: string | null; preferencesCategories: string | null }[],
   poidsMax: number
 ): string {
   const lignes: string[] = [];
@@ -19,9 +19,9 @@ function genererCSV(
 
   // Section abonnes
   lignes.push('abonnes');
-  for (const s of abonnes) {
-    // preferences est stocké "SOC,FIG,EVL,CON,LIV,EXT" — on garde tel quel
-    lignes.push(`${s.id};${s.prenom};${s.trancheAgeEnfant};${s.preferences}`);
+  for (const s of utilisateurs) {
+    // preferencesCategories est stocké "SOC,FIG,EVL,CON,LIV,EXT" — on garde tel quel
+    lignes.push(`${s.id};${s.prenom};${s.trancheAgeEnfant};${s.preferencesCategories}`);
   }
 
   lignes.push('');
@@ -55,19 +55,19 @@ export async function POST(
       );
     }
 
-    // Récupérer les articles DISPONIBLES et les abonnés
-    const [articles, abonnes] = await Promise.all([
+    // Récupérer les articles DISPONIBLES et les utilisateurs
+    const [articles, utilisateurs] = await Promise.all([
       prisma.article.findMany({
         where: { statut: 'DISPONIBLE' },
         select: { id: true, designation: true, categorie: true, trancheAge: true, etat: true, prix: true, poids: true },
       }),
-      prisma.abonne.findMany({
-        select: { id: true, prenom: true, trancheAgeEnfant: true, preferences: true },
+      prisma.utilisateur.findMany({
+        select: { id: true, prenom: true, trancheAgeEnfant: true, preferencesCategories: true },
       }),
     ]);
 
     // Générer le CSV au format attendu par l'algorithme d'optimisation
-    const csv = genererCSV(articles, abonnes, campagne.poidsMax);
+    const csv = genererCSV(articles, utilisateurs, campagne.poidsMax);
 
     // TODO: envoyer le CSV au service d'optimisation
     // const optimisationUrl = process.env.OPTIMISATION_URL ?? 'http://localhost:8000/optimize';
