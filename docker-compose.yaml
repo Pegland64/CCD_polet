@@ -1,4 +1,24 @@
 services:
+
+  app:
+    build: ./optimisation
+    container_name: typescript_app
+    networks:
+      - crazy-charly.net
+    secrets:
+      - db_user
+      - db_password
+      - db_name
+    environment:
+      - DB_HOST=db
+      - DB_USER_FILE=/run/secrets/db_user
+      - DB_PASSWORD_FILE=/run/secrets/db_password
+      - DB_NAME_FILE=/run/secrets/db_name
+    volumes:
+      - ./input_csv:/input_csv # pour les imports CSV
+      - ./output_csv:/output_csv # pour les exports CSV
+    command: /bin/sh -c "npm start && echo '--- Script terminé, le conteneur reste actif ---' && tail -f /dev/null"
+
   db:
     image: postgres:15-alpine
     restart: always

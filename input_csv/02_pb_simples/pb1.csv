@@ -1,0 +1,14 @@
+articles
+a1;Loto des animaux;SOC;PE;N;5;300
+a2;Poupée Clara;FIG;PE;TB;8;400
+a3;Duplo Ferme;CON;PE;B;9;500
+a4;Ballon sauteur;EXT;PE;N;4;500
+a5;Imagier sonore;EVL;PE;TB;6;250
+a6;T'choupi à l'école;LIV;PE;N;3;150
+
+abonnes
+s1;Emma;PE;SOC,EVL,FIG,CON,EXT,LIV
+s2;Lucas;PE;EXT,CON,SOC,FIG,EVL,LIV
+
+parametres
+1000

@@ -1,0 +1,45 @@
+# Dépendances
+node_modules/
+package-lock.json
+
+# Build TypeScript
+dist/
+*.js.map
+*.d.ts
+
+# Environnement & secrets
+secrets/
+*.env
+.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Docker
+.docker/
+
+# Python (generate_pb.py)
+__pycache__/
+*.pyc
+*.pyo
+
+# Fichiers de sortie
+output_csv/
+
+# Divers
+*.tmp
+*.bak
