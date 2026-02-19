@@ -1,0 +1,28 @@
+meta {
+  name: GET Liste abonnés
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/subscribers
+  body: none
+  auth: none
+}
+
+docs {
+  Retourne la liste de tous les abonnés (admin).
+
+  Réponse :
+  [
+    {
+      "id": "uuid",
+      "nom": "Dupont",
+      "prenom": "Alice",
+      "email": "alice.dupont@example.com",
+      "trancheAgeEnfant": "PE",
+      "preferences": "SOC,FIG,EVL,CON,LIV,EXT",
+      "createdAt": "..."
+    }
+  ]
+}

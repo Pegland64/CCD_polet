@@ -1,0 +1,37 @@
+meta {
+  name: POST Générer CSV optimisation
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/campaigns/{{campaignId}}/compose
+  body: none
+  auth: none
+}
+
+docs {
+  Lance la composition : génère le fichier CSV à envoyer à l'algorithme d'optimisation.
+
+  ⚠️ Remplace {{campaignId}} par un vrai id (récupéré via GET /api/campaigns).
+  La campagne doit être en statut BROUILLON.
+
+  Réponse : fichier CSV téléchargeable au format :
+  ---
+  articles
+  uuid;Monopoly Junior;SOC;PE;N;8;400
+  uuid;Barbie Aventurière;FIG;PE;TB;5;300
+  ...
+
+  abonnes
+  uuid;Alice;PE;SOC,FIG,EVL,CON,LIV,EXT
+  uuid;Bob;EN;EXT,CON,SOC,EVL,FIG,LIV
+  ...
+
+  parametres
+  1200
+  ---
+
+  Ce CSV est transmis à l'équipe optimisation.
+  Quand ils retournent leur CSV résultat, utiliser la route POST /api/campaigns/{id}/result.
+}

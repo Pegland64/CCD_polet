@@ -1,0 +1,31 @@
+meta {
+  name: GET Catalogue articles
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/articles
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 1
+}
+
+docs {
+  Retourne la liste paginée des articles disponibles (statut DISPONIBLE).
+  10 articles par page.
+
+  Réponse :
+  {
+    "data": [ ...articles... ],
+    "pagination": {
+      "page": 1,
+      "pageSize": 10,
+      "total": 8,
+      "totalPages": 1
+    }
+  }
+}

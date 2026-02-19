@@ -1,0 +1,36 @@
+meta {
+  name: POST Ajouter un article
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/articles
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "designation": "Lego City",
+    "categorie": "CON",
+    "trancheAge": "EN",
+    "etat": "N",
+    "prix": 15,
+    "poids": 500
+  }
+}
+
+docs {
+  Crée un nouvel article (admin).
+
+  Champs obligatoires :
+  - designation  : texte libre
+  - categorie    : SOC | FIG | CON | EXT | EVL | LIV
+  - trancheAge   : BB | PE | EN | AD
+  - etat         : N | TB | B
+  - prix         : entier (euros)
+  - poids        : entier (grammes)
+
+  Réponse 201 : l'article créé avec son id UUID.
+}

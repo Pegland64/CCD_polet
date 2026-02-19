@@ -1,0 +1,38 @@
+meta {
+  name: GET Boxes d'une campagne
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/campaigns/{{campaignId}}/boxes
+  body: none
+  auth: none
+}
+
+docs {
+  Retourne toutes les boxes d'une campagne avec le détail des articles (admin).
+
+  ⚠️ Remplace {{campaignId}} par un vrai id (récupéré via GET /api/campaigns).
+
+  Réponse :
+  {
+    "campagne": {
+      "id": "uuid",
+      "nom": "Campagne Test 2026",
+      "poidsMax": 1200,
+      "statut": "COMPOSEE",
+      "totalScore": 70
+    },
+    "boxes": [
+      {
+        "id": "uuid",
+        "score": 28,
+        "poidsTotal": 1000,
+        "prixTotal": 17,
+        "abonne": { "nom": "Dupont", "prenom": "Alice", "email": "...", ... },
+        "articles": [ { "designation": "Monopoly Junior", "categorie": "SOC", ... } ]
+      }
+    ]
+  }
+}

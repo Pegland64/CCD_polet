@@ -1,0 +1,30 @@
+meta {
+  name: GET Liste campagnes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/campaigns
+  body: none
+  auth: none
+}
+
+docs {
+  Retourne la liste de toutes les campagnes (admin).
+
+  Réponse :
+  [
+    {
+      "id": "uuid",
+      "nom": "Campagne Test 2026",
+      "poidsMax": 1200,
+      "statut": "BROUILLON",
+      "totalScore": null,
+      "_count": { "boxes": 0 },
+      "createdAt": "..."
+    }
+  ]
+
+  Statuts possibles : BROUILLON | COMPOSEE | VALIDEE
+}
