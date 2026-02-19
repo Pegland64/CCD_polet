@@ -25,8 +25,6 @@ export function SubscriberForm({ subscriber, onSuccess, onClose }: SubscriberFor
         preferences: subscriber ? subscriber.preferences.split(',') : CATEGORIES.map(c => c.id)
     });
 
-    // Simple drag and drop implementation would be complex, using simple reorder buttons or select for now?
-    // Let's implement a simple list with Up/Down actions for preferences
     const movePref = (index: number, direction: 'up' | 'down') => {
         const newPrefs = [...formData.preferences];
         if (direction === 'up' && index > 0) {

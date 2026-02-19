@@ -19,7 +19,13 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(utilisateurs);
+    // Map for frontend compatibility
+    const mapped = utilisateurs.map(u => ({
+      ...u,
+      preferences: u.preferencesCategories || ""
+    }));
+
+    return NextResponse.json(mapped);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch subscribers' }, { status: 500 });
   }
@@ -29,11 +35,11 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { authProviderId, nom, prenom, email, trancheAgeEnfant, preferencesCategories } = body;
+    const { authProviderId, nom, prenom, email, trancheAgeEnfant, preferencesCategories, preferences } = body;
 
-    if (!authProviderId || !email) {
+    if (!email) {
       return NextResponse.json(
-        { error: 'Champs manquants : authProviderId et email sont requis' },
+        { error: 'Le champ email est requis' },
         { status: 400 }
       );
     }
@@ -47,15 +53,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // preferencesCategories est stocké comme chaîne CSV ex: "SOC,FIG,EVL,CON,LIV,EXT"
-    const preferencesStr = preferencesCategories
-      ? Array.isArray(preferencesCategories)
-        ? preferencesCategories.join(',')
-        : String(preferencesCategories)
-      : undefined;
+    // On accepte 'preferences' (du formulaire admin) ou 'preferencesCategories'
+    const rawPrefs = preferences || preferencesCategories;
+    const preferencesStr = rawPrefs
+      ? Array.isArray(rawPrefs)
+        ? rawPrefs.join(',')
+        : String(rawPrefs)
+      : "";
 
     const utilisateur = await prisma.utilisateur.create({
-      data: { authProviderId, nom, prenom, email, trancheAgeEnfant, preferencesCategories: preferencesStr },
+      data: {
+        authProviderId: authProviderId || `manual_${Date.now()}`,
+        nom,
+        prenom,
+        email,
+        trancheAgeEnfant,
+        preferencesCategories: preferencesStr
+      },
     });
 
     return NextResponse.json(utilisateur, { status: 201 });

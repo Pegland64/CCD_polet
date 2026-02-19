@@ -58,7 +58,7 @@ export default function AbonnesPage() {
                 />
             </PageHeader>
 
-            <div className="px-5 pt-6 space-y-3">
+            <div className="px-5 md:px-10 pt-6 space-y-3">
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-4">
                         <Loader2 size={32} className="text-brand animate-spin" />
@@ -66,42 +66,46 @@ export default function AbonnesPage() {
                     </div>
                 ) : (
                     <>
-                        {displayed.map((sub) => {
-                            const prefs = sub.preferences.split(',').map(p => p.trim());
-                            return (
-                                <Card key={sub.id} variant="white" onClick={() => openForm(sub)} className="p-5 space-y-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-md">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center text-brand shrink-0">
-                                            <Users size={20} />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex justify-between items-center mb-1">
-                                                <h3 className="font-bold text-lg text-text-primary truncate tracking-tight">{sub.prenom} {sub.nom}</h3>
-                                                <span className="text-brand text-[9px] font-black whitespace-nowrap px-2 py-0.5 bg-brand/5 rounded-full">
-                                                    {TRANCHES_AGE.find(a => a.id === sub.trancheAgeEnfant)?.label || sub.trancheAgeEnfant}
-                                                </span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {displayed.map((sub) => {
+                                const prefs = sub.preferences.split(',').map(p => p.trim()).filter(Boolean);
+                                return (
+                                    <Card key={sub.id} variant="white" onClick={() => openForm(sub)} className="p-5 space-y-4 active:scale-[0.98] transition-all cursor-pointer hover:shadow-md border border-[#131445]/5">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center text-brand shrink-0">
+                                                <Users size={20} />
                                             </div>
-                                            <p className="text-[10px] text-text-primary/40 font-bold uppercase tracking-wider">{sub.email}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2 pt-3 border-t border-text-primary/5">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <ListOrdered size={12} className="text-brand" />
-                                            <span className="text-[9px] font-black uppercase text-brand tracking-widest">Préférences prioritaires</span>
-                                        </div>
-                                        <div className="flex flex-wrap gap-1.5">
-                                            {prefs.map((pref, idx) => (
-                                                <div key={pref} className={`px-2 py-1 rounded-md border text-[9px] font-bold flex items-center gap-1.5 ${idx < 3 ? 'bg-brand/5 border-brand/20 text-brand' : 'bg-bg-primary/50 border-text-primary/5 text-text-primary/40'}`}>
-                                                    <span className="opacity-40">{idx + 1}.</span>
-                                                    {CATEGORY_LABELS[pref] || pref}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-center mb-1">
+                                                    <h3 className="font-bold text-lg text-text-primary truncate tracking-tight">{sub.prenom} {sub.nom}</h3>
+                                                    <span className="text-brand text-[9px] font-black whitespace-nowrap px-2 py-0.5 bg-brand/5 rounded-full">
+                                                        {TRANCHES_AGE.find(a => a.id === sub.trancheAgeEnfant)?.label || sub.trancheAgeEnfant}
+                                                    </span>
                                                 </div>
-                                            ))}
+                                                <p className="text-[10px] text-text-primary/40 font-bold uppercase tracking-wider">{sub.email}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Card>
-                            );
-                        })}
+
+                                        <div className="space-y-2 pt-3 border-t border-text-primary/5">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <ListOrdered size={12} className="text-brand" />
+                                                <span className="text-[9px] font-black uppercase text-brand tracking-widest">Préférences prioritaires</span>
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {prefs.length > 0 ? prefs.map((pref, idx) => (
+                                                    <div key={pref} className={`px-2 py-1 rounded-md border text-[9px] font-bold flex items-center gap-1.5 ${idx < 3 ? 'bg-brand/5 border-brand/20 text-brand' : 'bg-bg-primary/50 border-text-primary/5 text-text-primary/40'}`}>
+                                                        <span className="opacity-40">{idx + 1}.</span>
+                                                        {CATEGORY_LABELS[pref] || pref}
+                                                    </div>
+                                                )) : (
+                                                    <span className="text-[10px] italic text-text-primary/20">Aucune préférence définie</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Card>
+                                );
+                            })}
+                        </div>
 
                         {!filtered.length && (
                             <div className="flex flex-col items-center justify-center py-20 text-center gap-4">

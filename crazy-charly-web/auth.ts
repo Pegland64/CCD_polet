@@ -27,26 +27,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
 
-    // jwt : enrichit le token avec id + role depuis la BDD (Node.js uniquement)
-    async jwt({ token }) {
+    // jwt : enrichit le token avec les infos de la BDD
+    async jwt({ token, user, trigger }) {
       if (token.email) {
         const dbUser = await prisma.utilisateur.findUnique({
           where: { email: token.email },
-          select: { id: true, role: true },
+          select: { id: true, role: true, trancheAgeEnfant: true, preferencesCategories: true },
         });
         if (dbUser) {
           token.id = dbUser.id;
           token.role = dbUser.role;
+          token.trancheAgeEnfant = dbUser.trancheAgeEnfant;
+          token.preferencesCategories = dbUser.preferencesCategories;
         }
       }
       return token;
     },
 
-    // session : expose id + role côté client
+    // session : expose les infos côté client
     session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        (session.user as any).id = token.id;
+        (session.user as any).role = token.role;
+        (session.user as any).trancheAgeEnfant = token.trancheAgeEnfant;
+        (session.user as any).preferencesCategories = token.preferencesCategories;
       }
       return session;
     },

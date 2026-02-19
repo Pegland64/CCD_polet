@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Weight, Info, ArrowRight, ShieldCheck, AlertCircle, CheckCircle, Users } from "lucide-react";
+import { Weight, Info, ArrowRight, ShieldCheck, AlertCircle, CheckCircle, Users, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -16,7 +16,6 @@ export default function CompositionView() {
     const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
 
     useEffect(() => {
-        // Fetch subscriber count to display recap
         fetcher<{ totalAbonnes: number }>('/api/stats').then(stats => {
             setSubscriberCount(stats.totalAbonnes);
         }).catch(err => console.error(err));
@@ -68,36 +67,36 @@ export default function CompositionView() {
                 </div>
             )}
 
-                <Card variant="white" className="p-6 flex flex-col justify-center items-center text-center space-y-2">
-                    <div className="w-12 h-12 bg-text-primary/5 rounded-full flex items-center justify-center text-text-primary/40 mb-2">
-                        <Users size={24} />
-                    </div>
-                    <span className="text-4xl font-black text-text-primary tabular-nums">
-                        {subscriberCount !== null ? subscriberCount : '--'}
-                    </span>
-                    <p className="text-xs font-bold text-text-primary/40 uppercase tracking-widest">Abonnés concernés</p>
-                </Card>
+            <Card variant="white" className="p-6 flex flex-col justify-center items-center text-center space-y-2">
+                <div className="w-12 h-6 bg-text-primary/5 rounded-full flex items-center justify-center text-text-primary/40 mb-2">
+                    <Users size={24} />
+                </div>
+                <span className="text-2xl font-black text-text-primary tabular-nums">
+                    {subscriberCount !== null ? subscriberCount : '--'}
+                </span>
+                <p className="text-xs font-bold text-text-primary/40 uppercase tracking-widest">Abonnés concernés</p>
+            </Card>
 
-                <Card variant="glass" className="p-6 space-y-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-brand/10 rounded-xl flex items-center justify-center text-brand">
-                            <Weight size={20} />
-                        </div>
-                        <div>
-                            <p className="text-[9px] font-black uppercase text-brand tracking-[0.2em] mb-0.5">Contraintes</p>
-                            <h3 className="font-bold text-lg">Limite de Poids</h3>
-                        </div>
+            <Card variant="glass" className="p-6 space-y-6">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-brand/10 rounded-xl flex items-center justify-center text-brand">
+                        <Weight size={20} />
                     </div>
-                    <div className="relative">
-                        <Input
-                            type="number"
-                            value={wMax}
-                            onChange={e => setWMax(e.target.value)}
-                            className="h-24 text-center text-5xl font-black !bg-text-primary/5 pr-12 tabular-nums"
-                        />
-                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-text-primary/20 font-black text-2xl">g</span>
+                    <div>
+                        <p className="text-[9px] font-black uppercase text-brand tracking-[0.2em] mb-0.5">Contraintes</p>
+                        <h3 className="font-bold text-lg">Limite de Poids</h3>
                     </div>
-                </Card>
+                </div>
+                <div className="relative">
+                    <Input
+                        type="number"
+                        value={wMax}
+                        onChange={e => setWMax(e.target.value)}
+                        className="h-24 text-center text-5xl font-black !bg-text-primary/5 pr-12 tabular-nums"
+                    />
+                    <span className="absolute right-6 top-1/2 -translate-y-1/2 text-text-primary/20 font-black text-2xl">g</span>
+                </div>
+            </Card>
 
             <div className="pt-4">
                 <Button
@@ -115,22 +114,3 @@ export default function CompositionView() {
     );
 }
 
-function Loader2({ className, ...props }: any) {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`animate-spin ${className}`}
-            {...props}
-        >
-            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-        </svg>
-    )
-}
