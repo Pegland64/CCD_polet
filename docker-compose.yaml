@@ -22,6 +22,8 @@ services:
   db:
     image: postgres:15-alpine
     restart: always
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER_FILE=/run/secrets/db_user
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
@@ -33,7 +35,7 @@ services:
     networks:
       - crazy-charly.net
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d crazy_charly" ]
+      test: [ "CMD-SHELL", "pg_isready -U app_user -d crazy_charly_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -56,6 +58,12 @@ services:
       - crazy-charly.net
     environment:
       - PORT=3000
+      - DATABASE_URL=postgresql://app_user:password@db:5432/crazy_charly_db?schema=public
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NEXTAUTH_SECRET=${AUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     restart: unless-stopped
     secrets:
       - db_user

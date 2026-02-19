@@ -25,7 +25,7 @@ EXPOSE 3000
 
 # Variable d'environnement Next.js
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL=postgresql://postgres:password@db:5432/crazy_charly?schema=public
+ENV DATABASE_URL=postgresql://app_user:password@db:5432/crazy_charly_db?schema=public
 
 # Script d'initialisation
 COPY entrypoint.sh /usr/local/bin/
