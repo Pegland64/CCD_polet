@@ -36,7 +36,6 @@ export function parseCSV(filePath: string): ParsedCSV {
         const colonnes = ligne.split(';');
 
         if (sectionCourante === 'articles') {
-            // a1;Monopoly Junior;SOC;PE;N;8;400
             const [id, designation, categorie, age, etat, prix, poids] = colonnes;
             articles.push(new Article(
                 id,
@@ -49,7 +48,6 @@ export function parseCSV(filePath: string): ParsedCSV {
             ));
 
         } else if (sectionCourante === 'abonnes') {
-            // s1;Alice;PE;SOC,FIG,EVL,CON,LIV,EXT
             const [id, prenom, age, prefsRaw] = colonnes;
             const preferences = prefsRaw.split(',').map((p: string) => p.trim() as Categorie);
             abonnes.push(new Abonne(
