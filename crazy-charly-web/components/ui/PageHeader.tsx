@@ -11,7 +11,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, badge, actions, children }: PageHeaderProps) {
     return (
-        <div className="sticky top-16 z-30 bg-bg-primary/80 backdrop-blur-xl pt-6 pb-6 px-5 border-b border-text-primary/5 w-full space-y-4">
+        <div className="sticky top-16 md:top-0 z-30 bg-bg-primary/80 backdrop-blur-xl pt-6 pb-6 px-5 border-b border-text-primary/5 w-full space-y-4">
             <div className="flex items-start justify-between">
                 <div>
                     <h1 className="font-display italic font-bold text-3xl text-text-primary">

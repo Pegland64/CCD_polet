@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,53 +6,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-// ============================================
-// ENUMS
-// ============================================
-
-enum Categorie {
-  SOC  // Jeux de société
-  FIG  // Figurines et poupées
-  CON  // Jeux de construction
-  EXT  // Jeux d'extérieur
-  EVL  // Jeux d'éveil et éducatifs
-  LIV  // Livres jeunesse
-}
-
-enum TrancheAge {
-  BB  // 0-3 ans (bébé)
-  PE  // 3-6 ans (petit enfant)
-  EN  // 6-10 ans (enfant)
-  AD  // 10+ ans (adolescent)
-}
-
-enum Etat {
-  N   // Neuf
-  TB  // Très bon état
-  B   // Bon état
-}
-
-enum StatutArticle {
-  DISPONIBLE  // Article disponible pour composition
-  EN_ATTENTE  // Article assigné à une box non validée
-  VALIDE      // Article validé dans une box
-}
-
-enum StatutCampagne {
-  BROUILLON   // Campagne créée
-  COMPOSEE    // Boxes composées (optimisation terminée)
-  VALIDEE     // Campagne validée
-}
-
-enum Role {
-  abonne
-  admin
-}
-
-// ============================================
-// MODELS
-// ============================================
 
 model Article {
   id          String        @id @default(uuid())
@@ -64,13 +16,10 @@ model Article {
   prix        Int
   poids       Int
   statut      StatutArticle @default(DISPONIBLE)
-  
-  // Relation avec Box
   boxId       String?
-  box         Box?          @relation(fields: [boxId], references: [id], onDelete: SetNull)
-  
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  box         Box?          @relation(fields: [boxId], references: [id])
 
   @@map("articles")
 }
@@ -84,48 +33,76 @@ model Utilisateur {
   role                  Role     @default(abonne)
   trancheAgeEnfant      String?  @map("tranche_age_enfant")
   preferencesCategories String?  @map("preferences_categories")
-
-  // Relation avec Box
-  boxes                 Box[]
-
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
+  boxes                 Box[]
 
   @@map("utilisateur")
 }
 
 model Campagne {
-  id          String          @id @default(uuid())
-  nom         String
-  poidsMax    Int
-  statut      StatutCampagne  @default(BROUILLON)
-  totalScore  Int?
-  
-  // Relation avec Box
-  boxes       Box[]
-  
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id         String         @id @default(uuid())
+  nom        String
+  poidsMax   Int
+  statut     StatutCampagne @default(BROUILLON)
+  totalScore Int?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  boxes      Box[]
 
   @@map("campagnes")
 }
 
 model Box {
-  id         String   @id @default(uuid())
-  score      Int
-  poidsTotal Int
-  prixTotal  Int
-  
-  // Relations
+  id            String      @id @default(uuid())
+  score         Int
+  poidsTotal    Int
+  prixTotal     Int
   campagneId    String
-  campagne      Campagne    @relation(fields: [campagneId], references: [id], onDelete: Cascade)
-
   utilisateurId String
+  createdAt     DateTime    @default(now())
+  articles      Article[]
+  campagne      Campagne    @relation(fields: [campagneId], references: [id], onDelete: Cascade)
   utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
-  
-  articles   Article[]
-  
-  createdAt  DateTime @default(now())
 
   @@map("boxes")
+}
+
+enum Categorie {
+  SOC
+  FIG
+  CON
+  EXT
+  EVL
+  LIV
+}
+
+enum TrancheAge {
+  BB
+  PE
+  EN
+  AD
+}
+
+enum Etat {
+  N
+  TB
+  B
+}
+
+enum StatutArticle {
+  DISPONIBLE
+  EN_ATTENTE
+  VALIDE
+}
+
+enum StatutCampagne {
+  BROUILLON
+  COMPOSEE
+  VALIDEE
+}
+
+enum Role {
+  abonne
+  admin
 }

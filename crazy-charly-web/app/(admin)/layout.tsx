@@ -1,3 +1,4 @@
+import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import BottomTabBar from "@/components/BottomTabBar";
 
@@ -7,12 +8,26 @@ export default function AdminLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1 pb-32">
-                {children}
-            </main>
-            <BottomTabBar />
+        <div className="flex min-h-screen bg-bg-primary">
+            {/* --- DESKTOP SIDEBAR --- */}
+            <Sidebar />
+
+            <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto relative">
+                {/* --- MOBILE ONLY HEADER --- */}
+                <div className="md:hidden sticky top-0 z-[60]">
+                    <Header />
+                </div>
+
+                {/* --- MAIN CONTENT --- */}
+                <main className="flex-1 pb-32 md:pb-10 md:pt-8 max-w-7xl mx-auto w-full">
+                    {children}
+                </main>
+
+                {/* --- MOBILE ONLY TAB BAR --- */}
+                <div className="md:hidden">
+                    <BottomTabBar />
+                </div>
+            </div>
         </div>
     );
 }

@@ -5,20 +5,20 @@ export async function GET() {
     try {
         const [totalArticles, totalAbonnes, articles, campaigns] = await Promise.all([
             prisma.article.count(),
-            prisma.abonne.count(),
+            prisma.utilisateur.count(),
             prisma.article.findMany({ select: { categorie: true, etat: true, trancheAge: true } }),
             prisma.campagne.findMany({ select: { totalScore: true }, where: { statut: 'VALIDEE' } }),
         ]);
 
         // Calculate score mean
-        const validatedCampaigns = campaigns.filter(c => c.totalScore !== null);
+        const validatedCampaigns = campaigns.filter((c: { totalScore: number | null }) => c.totalScore !== null);
         const scoreMoyen = validatedCampaigns.length > 0
-            ? Math.round(validatedCampaigns.reduce((acc, c) => acc + (c.totalScore || 0), 0) / validatedCampaigns.length)
+            ? Math.round(validatedCampaigns.reduce((acc: number, c: { totalScore: number | null }) => acc + (c.totalScore || 0), 0) / validatedCampaigns.length)
             : 0;
 
         // Build stats by category
         const catCounts: Record<string, number> = {};
-        articles.forEach(a => { catCounts[a.categorie] = (catCounts[a.categorie] || 0) + 1; });
+        articles.forEach((a: { categorie: string }) => { catCounts[a.categorie] = (catCounts[a.categorie] || 0) + 1; });
 
         const stockParCategorie = Object.keys(catCounts).map(id => ({
             id,
@@ -28,7 +28,7 @@ export async function GET() {
 
         // Repartition Etat
         const etatCounts: Record<string, number> = {};
-        articles.forEach(a => { etatCounts[a.etat] = (etatCounts[a.etat] || 0) + 1; });
+        articles.forEach((a: { etat: string }) => { etatCounts[a.etat] = (etatCounts[a.etat] || 0) + 1; });
         const total = articles.length || 1;
         const repartitionEtat = [
             { id: "N", label: "Neuf", percentage: Math.round(((etatCounts["N"] || 0) / total) * 100), color: "bg-brand" },
@@ -38,7 +38,7 @@ export async function GET() {
 
         // Repartition Age
         const ageCounts: Record<string, number> = {};
-        articles.forEach(a => { ageCounts[a.trancheAge] = (ageCounts[a.trancheAge] || 0) + 1; });
+        articles.forEach((a: { trancheAge: string }) => { ageCounts[a.trancheAge] = (ageCounts[a.trancheAge] || 0) + 1; });
         const repartitionAge = ["BB", "PE", "EN", "AD"].map(id => ({
             id,
             count: ageCounts[id] || 0
@@ -53,6 +53,7 @@ export async function GET() {
             repartitionAge
         });
     } catch (error) {
+        console.error("Stats API Error:", error);
         return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
     }
 }
