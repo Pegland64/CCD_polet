@@ -19,8 +19,6 @@ if [ ! -f "secrets/db_root_password.txt" ]; then
     echo "rootpassword" > secrets/db_root_password.txt
 fi
 
-<<<<<<< HEAD
-=======
 # si le fichier db_user.txt n'existe pas, on le crée
 if [ ! -f "secrets/db_user.txt" ]; then
     echo "app_user" > secrets/db_user.txt
@@ -30,8 +28,6 @@ fi
 if [ ! -f "secrets/db_name.txt" ]; then
     echo "crazy_charly_db" > secrets/db_name.txt
 fi
-
->>>>>>> Opti
 # si le dossier output_csv n'existe pas, on le crée
 if [ ! -d "output_csv" ]; then
     mkdir output_csv
