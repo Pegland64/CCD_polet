@@ -7,6 +7,8 @@ COPY package*.json ./
 
 # Installation des dépendances
 RUN apk add --no-cache openssl libc6-compat netcat-openbsd
+
+COPY package*.json ./
 RUN npm install
 
 # Linting et formatage (optionnel pour CI/CD)

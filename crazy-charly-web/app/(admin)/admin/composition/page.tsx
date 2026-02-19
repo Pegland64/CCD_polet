@@ -1,10 +1,19 @@
+"use client";
+
+import CompositionView from "@/components/CompositionView";
+import { PageHeader } from "@/components/ui/PageHeader";
+
 export default function CompositionPage() {
     return (
-        <div>
-            <h1 className="text-3xl font-bold">Composition des Box</h1>
-            <p className="mt-4 text-zinc-500">
-                Lancement de l'algorithme d'optimisation à venir.
-            </p>
+        <div className="font-sans min-h-screen bg-bg-primary">
+            <PageHeader
+                title="Composition"
+                subtitle="Optimisation des box"
+            />
+
+            <div className="px-5 pt-8">
+                <CompositionView />
+            </div>
         </div>
     );
 }
