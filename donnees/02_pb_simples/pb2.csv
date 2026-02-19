@@ -1,0 +1,19 @@
+articles
+a1;Uno Junior;SOC;PE;N;5;200
+a2;Poupée Clara;FIG;PE;TB;7;350
+a3;Mega Bloks;CON;PE;B;9;500
+a4;Trottinette;EXT;PE;N;12;800
+a5;Xylophone;EVL;PE;TB;6;300
+a6;Mon premier atlas;LIV;PE;N;4;200
+a7;Cluedo;SOC;EN;B;8;400
+a8;Figurine Dragon;FIG;EN;N;10;200
+a9;Meccano;CON;EN;TB;11;600
+a10;Frisbee;EXT;EN;N;3;150
+
+abonnes
+s1;Léa;PE;FIG,SOC,EVL,CON,EXT,LIV
+s2;Noah;EN;CON,EXT,SOC,EVL,FIG,LIV
+s3;Jade;PE;EVL,LIV,FIG,SOC,CON,EXT
+
+parametres
+1200
