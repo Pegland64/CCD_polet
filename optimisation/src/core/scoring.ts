@@ -8,7 +8,7 @@ import { Article } from '../models/Article';
 const POINTS_PAR_RANG: number[] = [10, 8, 6, 4, 2, 1];
 
 /**
- * Retourne les points de préférence d'un article pour un abonné donné suivant son ordre de préference (Règle 4)
+ * Retourne les points de préférence d'un article pour un abonné donné suivant son ordre de préference (Règle 4 seulement pour le moment)
  */
 export function getPointsPreference(abonne: Abonne, article: Article): number {
     const rang = abonne.preferences.indexOf(article.categorie);

@@ -1,8 +1,7 @@
 import {Article} from "../models/Article";
 import {Abonne} from "../models/Abonne";
-import {Box} from "../models/Box";
-import {peutAjouter, validerComposition} from "../core/validator";
-import {calculerScoreTotal} from "../core/scoring";
+import {peutAjouter} from "../core/validator";
+import {getPointsPreference} from "../core/scoring";
 
 export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): Abonne[] {
     const remaining = [...articles]; // Copie de la liste des articles
@@ -17,7 +16,7 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
                 //ici mettre les vérifications
                 if (!peutAjouter(ab, art, wmax)) continue;
                 //ici mettre le gain
-                const gain = calculerGain(ab, art, abonnes);
+                const gain = getPointsPreference(ab, art);
 
                 if(!bestMove || gain > bestMove.gain){
                     bestMove = { abIndex: j, artIndex: i, gain };
@@ -25,7 +24,8 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
             }
 
         }
-        if(!bestMove) break;// Aucun mouvement possible, on arrête
+
+        if (!bestMove || bestMove.gain <= 0) break; // Aucun mouvement rentable, on arrête
 
         // On effectue le meilleur mouvement trouvé
         const ab = abonnes[bestMove.abIndex];
@@ -34,18 +34,4 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
         remaining.splice(bestMove.artIndex, 1); // Retire l'article de la liste des restants
     }
     return abonnes;
-}
-
-function calculerGain(abonne: Abonne, article: Article, abonnes: Abonne[]): number {
-    // Score avant
-    const scoreAvant = calculerScoreTotal(abonnes);
-
-    // Ajouter temporairement
-    abonne.box.ajouterArticle(article);
-
-    const scoreApres = calculerScoreTotal(abonnes);
-
-    abonne.box.articles.pop();
-
-    return scoreApres - scoreAvant;
 }
