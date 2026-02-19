@@ -1,0 +1,23 @@
+services:
+
+  ###################
+  # Backend Python  #
+  ###################
+
+  app:
+    build: ./optimisation
+    container_name: typescript_app
+    networks:
+      - ccd_network
+
+    volumes:
+      - ./input_csv:/input_csv # pour les imports CSV
+      - ./output_csv:/output_csv # pour les exports CSV
+
+###################
+# Networks        #
+###################
+
+networks:
+  ccd_network:
+    driver: bridge
