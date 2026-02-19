@@ -15,8 +15,10 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
 
                 //ici mettre les vérifications
                 if (!peutAjouter(ab, art, wmax)) continue;
-                //ici mettre le gain
-                const gain = getScoreArticle(ab, art);
+
+                // Gain avec dégressivité (Règle 6) : on compte les articles de même catégorie déjà dans la box
+                const n = ab.box.articles.filter(a => a.categorie === art.categorie).length;
+                const gain = getScoreArticle(ab, art, n);
 
                 if(!bestMove || gain > bestMove.gain){
                     bestMove = { abIndex: j, artIndex: i, gain };

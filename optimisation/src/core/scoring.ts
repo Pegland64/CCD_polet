@@ -1,6 +1,6 @@
 import { Abonne } from '../models/Abonne';
 import { Article } from '../models/Article';
-import { Etat } from '../models/types';
+import { Categorie, Etat } from '../models/types';
 
 /**
  * Table de correspondance rang de préférence → points (Règle 4)
@@ -32,20 +32,27 @@ export function getBonusEtat(article: Article): number {
 }
 
 /**
- * Retourne le score complet d'un article placé dans la box d'un abonné
- * = points de préférence (Règle 4) + bonus d'état (Règle 5).
+ * Retourne le score d'un article avec dégressivité (Règles 4 + 5 + 6).
+ * @param dejaMemeCategorie Nombre d'articles de la même catégorie déjà dans la box (0 = premier)
  */
-export function getScoreArticle(abonne: Abonne, article: Article): number {
-    return getPointsPreference(abonne, article) + getBonusEtat(article);
+export function getScoreArticle(abonne: Abonne, article: Article, dejaMemeCategorie: number = 0): number {
+    const rang = abonne.preferences.indexOf(article.categorie);
+    const rangEffectif = rang === -1 ? 6 : rang + dejaMemeCategorie; // décalage Règle 6
+    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;          // au-delà du 6ème → 1 pt
+    return pointsPref + getBonusEtat(article);
 }
 
 /**
- * Calcule le score d'une box individuelle (Règles 4 + 5).
+ * Calcule le score d'une box individuelle (Règles 4 + 5 + 6).
  */
 export function calculerScoreBox(abonne: Abonne): number {
     let score = 0;
+    const countCat: Partial<Record<Categorie, number>> = {};
+
     for (const article of abonne.box.articles) {
-        score += getScoreArticle(abonne, article);
+        const n = countCat[article.categorie] ?? 0;
+        score += getScoreArticle(abonne, article, n);
+        countCat[article.categorie] = n + 1;
     }
     return score;
 }
@@ -88,7 +95,7 @@ export function calculerMalusBoxVide(abonnes: Abonne[]): number {
 }
 
 /**
- * Calcule le score global d'une composition (Règles 4 + 5 + 7 + 8).
+ * Calcule le score global d'une composition (Règles 4 + 5 + 6 + 7 + 8).
  */
 export function calculerScoreTotal(abonnes: Abonne[]): number {
     let scoreTotal = 0;
