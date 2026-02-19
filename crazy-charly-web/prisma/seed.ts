@@ -9,7 +9,7 @@ async function main() {
   await prisma.article.updateMany({ data: { boxId: null } });
   await prisma.box.deleteMany();
   await prisma.campagne.deleteMany();
-  await prisma.abonne.deleteMany();
+  await prisma.utilisateur.deleteMany();
   await prisma.article.deleteMany();
 
   // ============================================
@@ -70,30 +70,30 @@ async function main() {
   console.log(`${articles.count} articles créés`);
 
   // ============================================
-  // 12 ABONNÉS — toutes tranches d'âge
+  // 12 UTILISATEURS — toutes tranches d'âge
   // ============================================
-  const abonnes = await prisma.abonne.createMany({
+  const utilisateurs = await prisma.utilisateur.createMany({
     data: [
       // PE
-      { nom: 'Dupont',    prenom: 'Alice',   email: 'alice.dupont@example.com',    trancheAgeEnfant: 'PE', preferences: 'SOC,FIG,EVL,CON,LIV,EXT' },
-      { nom: 'Durand',    prenom: 'Clara',   email: 'clara.durand@example.com',    trancheAgeEnfant: 'PE', preferences: 'EVL,LIV,FIG,SOC,CON,EXT' },
-      { nom: 'Lefebvre',  prenom: 'Emma',    email: 'emma.lefebvre@example.com',   trancheAgeEnfant: 'PE', preferences: 'FIG,SOC,LIV,EVL,CON,EXT' },
-      { nom: 'Renard',    prenom: 'Sophie',  email: 'sophie.renard@example.com',   trancheAgeEnfant: 'PE', preferences: 'CON,EVL,SOC,FIG,EXT,LIV' },
+      { authProviderId: 'auth_alice',   nom: 'Dupont',    prenom: 'Alice',   email: 'alice.dupont@example.com',    trancheAgeEnfant: 'PE', preferencesCategories: 'SOC,FIG,EVL,CON,LIV,EXT' },
+      { authProviderId: 'auth_clara',   nom: 'Durand',    prenom: 'Clara',   email: 'clara.durand@example.com',    trancheAgeEnfant: 'PE', preferencesCategories: 'EVL,LIV,FIG,SOC,CON,EXT' },
+      { authProviderId: 'auth_emma',    nom: 'Lefebvre',  prenom: 'Emma',    email: 'emma.lefebvre@example.com',   trancheAgeEnfant: 'PE', preferencesCategories: 'FIG,SOC,LIV,EVL,CON,EXT' },
+      { authProviderId: 'auth_sophie',  nom: 'Renard',    prenom: 'Sophie',  email: 'sophie.renard@example.com',   trancheAgeEnfant: 'PE', preferencesCategories: 'CON,EVL,SOC,FIG,EXT,LIV' },
       // EN
-      { nom: 'Martin',    prenom: 'Bob',     email: 'bob.martin@example.com',      trancheAgeEnfant: 'EN', preferences: 'EXT,CON,SOC,EVL,FIG,LIV' },
-      { nom: 'Bernard',   prenom: 'Lucas',   email: 'lucas.bernard@example.com',   trancheAgeEnfant: 'EN', preferences: 'SOC,EVL,CON,LIV,EXT,FIG' },
-      { nom: 'Petit',     prenom: 'Hugo',    email: 'hugo.petit@example.com',      trancheAgeEnfant: 'EN', preferences: 'CON,SOC,EXT,FIG,EVL,LIV' },
+      { authProviderId: 'auth_bob',     nom: 'Martin',    prenom: 'Bob',     email: 'bob.martin@example.com',      trancheAgeEnfant: 'EN', preferencesCategories: 'EXT,CON,SOC,EVL,FIG,LIV' },
+      { authProviderId: 'auth_lucas',   nom: 'Bernard',   prenom: 'Lucas',   email: 'lucas.bernard@example.com',   trancheAgeEnfant: 'EN', preferencesCategories: 'SOC,EVL,CON,LIV,EXT,FIG' },
+      { authProviderId: 'auth_hugo',    nom: 'Petit',     prenom: 'Hugo',    email: 'hugo.petit@example.com',      trancheAgeEnfant: 'EN', preferencesCategories: 'CON,SOC,EXT,FIG,EVL,LIV' },
       // AD
-      { nom: 'Moreau',    prenom: 'Théo',    email: 'theo.moreau@example.com',     trancheAgeEnfant: 'AD', preferences: 'SOC,CON,EXT,EVL,FIG,LIV' },
-      { nom: 'Simon',     prenom: 'Léa',     email: 'lea.simon@example.com',       trancheAgeEnfant: 'AD', preferences: 'LIV,SOC,EVL,CON,FIG,EXT' },
-      { nom: 'Laurent',   prenom: 'Nathan',  email: 'nathan.laurent@example.com',  trancheAgeEnfant: 'AD', preferences: 'EXT,SOC,CON,FIG,LIV,EVL' },
+      { authProviderId: 'auth_theo',    nom: 'Moreau',    prenom: 'Théo',    email: 'theo.moreau@example.com',     trancheAgeEnfant: 'AD', preferencesCategories: 'SOC,CON,EXT,EVL,FIG,LIV' },
+      { authProviderId: 'auth_lea',     nom: 'Simon',     prenom: 'Léa',     email: 'lea.simon@example.com',       trancheAgeEnfant: 'AD', preferencesCategories: 'LIV,SOC,EVL,CON,FIG,EXT' },
+      { authProviderId: 'auth_nathan',  nom: 'Laurent',   prenom: 'Nathan',  email: 'nathan.laurent@example.com',  trancheAgeEnfant: 'AD', preferencesCategories: 'EXT,SOC,CON,FIG,LIV,EVL' },
       // BB
-      { nom: 'Thomas',    prenom: 'Julie',   email: 'julie.thomas@example.com',    trancheAgeEnfant: 'BB', preferences: 'EVL,FIG,LIV,SOC,CON,EXT' },
-      { nom: 'Robert',    prenom: 'Marie',   email: 'marie.robert@example.com',    trancheAgeEnfant: 'BB', preferences: 'FIG,EVL,LIV,CON,SOC,EXT' },
+      { authProviderId: 'auth_julie',   nom: 'Thomas',    prenom: 'Julie',   email: 'julie.thomas@example.com',    trancheAgeEnfant: 'BB', preferencesCategories: 'EVL,FIG,LIV,SOC,CON,EXT' },
+      { authProviderId: 'auth_marie',   nom: 'Robert',    prenom: 'Marie',   email: 'marie.robert@example.com',    trancheAgeEnfant: 'BB', preferencesCategories: 'FIG,EVL,LIV,CON,SOC,EXT' },
     ],
   });
 
-  console.log(`${abonnes.count} abonnés créés`);
+  console.log(`${utilisateurs.count} utilisateurs créés`);
 
   // ============================================
   // 3 CAMPAGNES dans des états différents
@@ -107,9 +107,9 @@ async function main() {
   });
 
   // Campagne VALIDÉE avec des boxes — pour tester la consultation abonné
-  const abonneAlice  = await prisma.abonne.findUnique({ where: { email: 'alice.dupont@example.com' } });
-  const abonneBob    = await prisma.abonne.findUnique({ where: { email: 'bob.martin@example.com' } });
-  const abonneLea    = await prisma.abonne.findUnique({ where: { email: 'lea.simon@example.com' } });
+  const utilisateurAlice  = await prisma.utilisateur.findUnique({ where: { email: 'alice.dupont@example.com' } });
+  const utilisateurBob    = await prisma.utilisateur.findUnique({ where: { email: 'bob.martin@example.com' } });
+  const utilisateurLea    = await prisma.utilisateur.findUnique({ where: { email: 'lea.simon@example.com' } });
 
   const articlesAlice = await prisma.article.findMany({
     where: { designation: { in: ['Monopoly Junior', 'Barbie Aventurière', 'Puzzle éducatif 24p'] } },
@@ -133,21 +133,21 @@ async function main() {
             score: 56,
             poidsTotal: articlesAlice.reduce((s, a) => s + a.poids, 0),
             prixTotal:  articlesAlice.reduce((s, a) => s + a.prix,  0),
-            abonneId: abonneAlice!.id,
+            utilisateurId: utilisateurAlice!.id,
             articles: { connect: articlesAlice.map(a => ({ id: a.id })) },
           },
           {
             score: 48,
             poidsTotal: articlesBob.reduce((s, a) => s + a.poids, 0),
             prixTotal:  articlesBob.reduce((s, a) => s + a.prix,  0),
-            abonneId: abonneBob!.id,
+            utilisateurId: utilisateurBob!.id,
             articles: { connect: articlesBob.map(a => ({ id: a.id })) },
           },
           {
             score: 52,
             poidsTotal: articlesLea.reduce((s, a) => s + a.poids, 0),
             prixTotal:  articlesLea.reduce((s, a) => s + a.prix,  0),
-            abonneId: abonneLea!.id,
+            utilisateurId: utilisateurLea!.id,
             articles: { connect: articlesLea.map(a => ({ id: a.id })) },
           },
         ],

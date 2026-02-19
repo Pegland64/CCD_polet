@@ -19,7 +19,7 @@ export async function GET(
     const boxes = await prisma.box.findMany({
       where: { campagneId: id },
       include: {
-        abonne: {
+        utilisateur: {
           select: { id: true, nom: true, prenom: true, email: true, trancheAgeEnfant: true },
         },
         articles: {
