@@ -1,8 +1,6 @@
 import {Article} from "./Article";
-import {Categorie, TrancheAge} from "./types";
+import {AGE_TRANCHES, Categorie, TrancheAge} from "./types";
 import { Box } from './Box';
-
-const AGE_TRANCHES: TrancheAge[] = ["BB", "PE", "EN", "AD"];
 
 export class Abonne {
     public box: Box;

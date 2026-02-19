@@ -1,6 +1,9 @@
 import { createPool } from "mariadb";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { Article } from "../models/Article.js";
+import { Abonne } from "../models/Abonne.js";
+import { Categorie, TrancheAge, Etat } from "../models/types.js";
 
 const readSecret = (secretPath: string, defaultValue: string): string => {
     try {
@@ -24,28 +27,50 @@ export const pool = createPool({
     connectionLimit: 5,
 });
 
-export interface Abonne {
-    id: string;
-    nom: string;
-    prenom: string;
-    age: number;
-    budget: number;
-}
-
 export async function getAbonnes(): Promise<Abonne[]> {
     let conn;
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query("SELECT * FROM abonnes");
-        return rows.map((row: any) => ({
-            id: `s${row.id_abonne}`,
-            nom: row.nom,
-            prenom: row.prenom,
-            age: Number(row.age),
-            budget: Number(row.budget),
-        }));
+        const rows = await conn.query(
+            "SELECT id, prenom, tranche_age_enfant, preferences_categories FROM utilisateur WHERE role = 'abonne'"
+        );
+        return rows.map((row: any) => {
+            const prefs: Categorie[] = row.preferences_categories
+                ? (row.preferences_categories as string).split(',').map(s => s.trim() as Categorie)
+                : [];
+            return new Abonne(
+                row.id,
+                row.prenom,
+                row.tranche_age_enfant as TrancheAge,
+                prefs
+            );
+        });
     } catch (err) {
         console.error("Erreur lors de la récupération des abonnés:", err);
+        return [];
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function getArticles(): Promise<Article[]> {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query(
+            "SELECT id, designation, categorie, trancheAge, etat, prix, poids FROM articles WHERE statut = 'DISPONIBLE'"
+        );
+        return rows.map((row: any) => new Article(
+            row.id,
+            row.designation,
+            row.categorie as Categorie,
+            row.trancheAge as TrancheAge,
+            row.etat as Etat,
+            Number(row.prix),
+            Number(row.poids),
+        ));
+    } catch (err) {
+        console.error("Erreur lors de la récupération des articles:", err);
         return [];
     } finally {
         if (conn) conn.release();
@@ -60,6 +85,9 @@ async function main() {
 
         const abonnes = await getAbonnes();
         console.log("Abonnés récupérés:", abonnes);
+
+        const articles = await getArticles();
+        console.log("Articles récupérés:", articles);
 
     } catch (err) {
         console.error("Error connecting or querying:", err);
