@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Subscriber } from '@/lib/types';
 
 // GET /api/subscribers — Liste de tous les utilisateurs (admin)
 export async function GET() {
@@ -20,7 +21,7 @@ export async function GET() {
 
     return NextResponse.json(utilisateurs);
   } catch (error) {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch subscribers' }, { status: 500 });
   }
 }
 
@@ -59,6 +60,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(utilisateur, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create subscriber' }, { status: 500 });
   }
 }

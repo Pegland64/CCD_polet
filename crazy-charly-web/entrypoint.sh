@@ -1,9 +1,8 @@
 #!/bin/sh
 set -e
 
-echo "--- Waiting for database to be ready (db:5432) ---"
-while ! nc -z db 5432; do
-  echo "Database is not reachable yet - sleeping..."
+until nc -z db 5432; do
+  echo "Waiting for database..."
   sleep 2
 done
 
