@@ -63,10 +63,9 @@ export function getScoreArticle(abonne: Abonne, article: Article, dejaMemeCatego
 
     const rang = abonne.preferences.indexOf(article.categorie);
     const rangEffectif = rang === -1 ? 6 : rang + dejaMemeCategorie; // décalage Règle 6
-    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;           // au-delà du 6ème → 1 pt
+    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;
     const bonusEtat = getBonusEtat(article);
 
-    // Appliquer la pénalité d'âge sur les points de préférence uniquement (arrondi supérieur, min 1)
     const pointsPrefAjustes = Math.max(1, Math.ceil(pointsPref * factor));
     return pointsPrefAjustes + bonusEtat;
 }

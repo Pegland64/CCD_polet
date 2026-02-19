@@ -20,6 +20,8 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
                 const n = ab.box.articles.filter(a => a.categorie === art.categorie).length;
                 const gain = getScoreArticle(ab, art, n);
 
+                if (gain === null) continue; // article incompatible (tranches non adjacentes)
+
                 if(!bestMove || gain > bestMove.gain){
                     bestMove = { abIndex: j, artIndex: i, gain };
                 }

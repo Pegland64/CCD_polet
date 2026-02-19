@@ -1,5 +1,8 @@
 import { Abonne } from '../models/Abonne';
 import { Article } from '../models/Article';
+import { TrancheAge } from '../models/types';
+
+const AGE_TRANCHES: TrancheAge[] = ["BB", "PE", "EN", "AD"];
 
 /**
  * Résultat de la validation d'une composition.
@@ -34,12 +37,14 @@ export function validerComposition(abonnes: Abonne[], poidsMax: number): Validat
         }
     }
 
-    // --- Règle 2 : compatibilité d'âge ---
+    // --- Règle 2 : compatibilité d'âge (tranches non adjacentes interdites) ---
     for (const abonne of abonnes) {
         for (const article of abonne.box.articles) {
-            if (article.age !== abonne.ageEnfant) {
+            const idxAbonne = AGE_TRANCHES.indexOf(abonne.ageEnfant);
+            const idxArticle = AGE_TRANCHES.indexOf(article.age);
+            if (Math.abs(idxAbonne - idxArticle) > 1) {
                 interdictions.push(
-                    `Règle 2 (âge) : l'article ${article.id} (${article.age}) est incompatible avec l'abonné ${abonne.prenom} (${abonne.ageEnfant}).`
+                    `Règle 2 (âge) : l'article ${article.id} (${article.age}) est incompatible avec l'abonné ${abonne.prenom} (${abonne.ageEnfant}) — tranches non adjacentes.`
                 );
             }
         }
