@@ -1,0 +1,126 @@
+articles
+a1;Portique bébé;EXT;BB;N;11;450
+a2;Imagier bébé animaux;LIV;BB;B;3;150
+a3;Doudou lapin;FIG;BB;B;4;150
+a4;Hochet musical;EVL;BB;N;11;400
+a5;Livre d'images bébé;LIV;BB;B;7;100
+a6;Livre de bain;LIV;BB;B;5;250
+a7;Tour empilable;CON;BB;TB;9;450
+a8;Peluche musicale chat;FIG;BB;B;6;150
+a9;Boulier bébé;EVL;BB;B;3;450
+a10;Ballon mousse;EXT;BB;N;6;100
+a11;Boîte à formes bébé;EVL;BB;TB;11;550
+a12;Mon premier puzzle;SOC;BB;TB;8;200
+a13;Livre tissu jungle;LIV;BB;N;11;100
+a14;Blocs à empiler;CON;BB;B;7;550
+a15;Tapis sensoriel;EVL;BB;N;3;300
+a16;Tapis d'éveil;EXT;BB;N;6;800
+a17;LIV BB #17;LIV;BB;B;9;250
+a18;Livre tissu sensoriel;EVL;BB;B;7;400
+a19;Loto découverte bébé;SOC;BB;TB;8;400
+a20;EXT BB #20;EXT;BB;B;10;800
+a21;Les animaux de la ferme;LIV;PE;B;7;250
+a22;Playmobil ferme;FIG;PE;TB;6;100
+a23;Duplo train;CON;PE;B;10;650
+a24;Figurine dinosaure;FIG;PE;B;5;350
+a25;Duplo ferme;CON;PE;N;8;750
+a26;Clipo animaux;CON;PE;N;3;300
+a27;Jeu de quilles;EXT;PE;B;14;750
+a28;Puzzle animaux;EVL;PE;TB;4;450
+a29;Dominos couleurs;SOC;PE;N;11;250
+a30;Briques souples;CON;PE;B;6;350
+a31;Xylophone;EVL;PE;TB;10;150
+a32;Cubes alphabet;CON;PE;TB;7;500
+a33;Ballon sauteur;EXT;PE;TB;10;600
+a34;T'choupi à l'école;LIV;PE;B;11;200
+a35;Peluche ours géant;FIG;PE;B;10;250
+a36;Livre cache-cache;LIV;PE;N;15;100
+a37;Perles à enfiler;EVL;PE;TB;7;300
+a38;Mon premier atlas;LIV;PE;TB;9;350
+a39;Dobble Kids;SOC;PE;TB;8;500
+a40;Playmobil école;FIG;PE;TB;9;250
+a41;Barbie princesse;FIG;PE;N;15;300
+a42;Petit Ours Brun;LIV;PE;B;8;250
+a43;Poupée Clara;FIG;PE;B;9;200
+a44;Trottinette 3 roues;EXT;PE;TB;14;700
+a45;Loto des animaux;SOC;PE;TB;7;300
+a46;Tablette dessin magique;EVL;PE;TB;7;500
+a47;LIV PE #47;LIV;PE;N;11;400
+a48;Jeu de l'oie Junior;SOC;PE;N;8;200
+a49;Cerf-volant papillon;EXT;PE;TB;7;700
+a50;Plus-Plus Mini;CON;PE;B;9;600
+a51;Globe interactif;EVL;EN;B;11;50
+a52;Lego City caserne;CON;EN;N;15;400
+a53;Lego Ninjago;CON;EN;N;10;500
+a54;Kapla 200 pièces;CON;EN;B;18;750
+a55;Peluche panda;FIG;EN;B;9;150
+a56;Corde à sauter;EXT;EN;TB;18;150
+a57;Dobble;SOC;EN;B;12;400
+a58;Le Petit Prince;LIV;EN;TB;16;250
+a59;Max et Lili;LIV;EN;TB;20;250
+a60;Chair de Poule T1;LIV;EN;N;20;150
+a61;Playmobil chevalier;FIG;EN;TB;16;200
+a62;Journal d'un dégonflé;LIV;EN;N;16;200
+a63;Diabolo;EXT;EN;B;17;400
+a64;Meccano voiture;CON;EN;B;6;600
+a65;Frisbee;EXT;EN;B;14;600
+a66;Figurine dragon;FIG;EN;B;15;350
+a67;Geomag;CON;EN;B;15;550
+a68;Puissance 4;SOC;EN;N;10;550
+a69;Ballon de foot;EXT;EN;B;17;750
+a70;Cluedo Junior;SOC;EN;B;11;150
+a71;Kit électricité;EVL;EN;N;11;500
+a72;Microscope junior;EVL;EN;B;11;350
+a73;Le Petit Nicolas;LIV;EN;N;15;250
+a74;LIV EN #74;LIV;EN;B;11;150
+a75;Tangram;EVL;EN;B;9;200
+a76;LIV EN #76;LIV;EN;B;6;100
+a77;Cerf-volant pirate;EXT;EN;TB;10;250
+a78;LIV EN #78;LIV;EN;B;16;150
+a79;LIV EN #79;LIV;EN;N;10;100
+a80;Jungle Speed;SOC;EN;B;9;350
+a81;Lego Architecture;CON;AD;N;13;450
+a82;Slackline;EXT;AD;B;23;300
+a83;Meccano complexe;CON;AD;N;25;650
+a84;Boomerang;EXT;AD;TB;22;450
+a85;Maquette bateau;CON;AD;N;17;650
+a86;Figurine Star Wars;FIG;AD;N;14;200
+a87;Harry Potter T1;LIV;AD;N;19;400
+a88;Skateboard;EXT;AD;N;13;300
+a89;Azul;SOC;AD;N;21;150
+a90;Kit programmation;EVL;AD;N;16;350
+a91;Les Trois Mousquetaires;LIV;AD;TB;8;300
+a92;Kit chimie;EVL;AD;TB;19;550
+a93;Manga One Piece T1;LIV;AD;N;12;350
+a94;Dixit;SOC;AD;TB;22;350
+a95;Télescope junior;EVL;AD;B;9;400
+a96;Figurine manga;FIG;AD;B;10;300
+a97;Manga Naruto T1;LIV;AD;TB;25;350
+a98;Codenames;SOC;AD;N;16;300
+a99;Kit Arduino;EVL;AD;N;9;100
+a100;Kit robotique;EVL;AD;B;11;450
+
+abonnes
+s1;Emma;PE;SOC,FIG,CON,EXT,EVL,LIV
+s2;Lucas;PE;CON,LIV,EXT,FIG,SOC,EVL
+s3;Chloé;PE;FIG,CON,EVL,EXT,LIV,SOC
+s4;Hugo;PE;FIG,LIV,EXT,SOC,CON,EVL
+s5;Inès;PE;EXT,FIG,CON,SOC,LIV,EVL
+s6;Léa;PE;EXT,SOC,EVL,CON,FIG,LIV
+s7;Nathan;EN;LIV,SOC,EVL,FIG,EXT,CON
+s8;Jade;EN;LIV,FIG,SOC,EXT,CON,EVL
+s9;Tom;EN;CON,SOC,EXT,LIV,EVL,FIG
+s10;Camille;EN;LIV,FIG,CON,EXT,EVL,SOC
+s11;Mathis;EN;CON,LIV,FIG,SOC,EVL,EXT
+s12;Sarah;EN;CON,FIG,EVL,LIV,SOC,EXT
+s13;Julie;BB;SOC,EXT,LIV,CON,EVL,FIG
+s14;Éric;BB;CON,EXT,FIG,SOC,EVL,LIV
+s15;Marie;BB;FIG,EXT,LIV,CON,SOC,EVL
+s16;Pierre;BB;CON,SOC,LIV,EXT,FIG,EVL
+s17;Claire;AD;FIG,CON,LIV,EVL,EXT,SOC
+s18;Denis;AD;EXT,LIV,EVL,CON,SOC,FIG
+s19;Nadia;AD;FIG,EXT,EVL,LIV,SOC,CON
+s20;Olivier;AD;CON,EXT,LIV,SOC,EVL,FIG
+
+parametres
+2000

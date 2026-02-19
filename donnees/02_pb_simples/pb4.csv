@@ -1,0 +1,31 @@
+articles
+a1;Uno Junior;SOC;PE;N;5;200
+a2;Poupée Léa;FIG;PE;TB;7;350
+a3;Cubes empilables;CON;PE;B;4;300
+a4;Ballon sauteur;EXT;PE;N;6;400
+a5;Mon premier imagier;LIV;PE;TB;5;200
+a6;Puzzle animaux;EVL;PE;N;4;250
+a7;Dominos couleurs;SOC;PE;TB;3;200
+a8;Risk Junior;SOC;EN;B;9;500
+a9;Figurine Dragon;FIG;EN;N;6;200
+a10;Lego City;CON;EN;TB;20;700
+a11;Corde à sauter;EXT;EN;N;2;100
+a12;Globe interactif;EVL;EN;B;18;600
+a13;Le Petit Nicolas;LIV;EN;TB;5;200
+a14;Jeu de mémoire;SOC;EN;N;7;300
+a15;Meccano voiture;CON;EN;B;12;500
+a16;Monopoly classique;SOC;AD;TB;12;600
+a17;Manga One Piece;LIV;AD;B;8;200
+a18;Maquette avion;CON;AD;N;15;400
+a19;Skateboard;EXT;AD;TB;20;800
+a20;Kit Arduino;EVL;AD;N;25;300
+
+abonnes
+s1;Emma;PE;SOC,FIG,EVL,CON,LIV,EXT
+s2;Lucas;EN;EXT,CON,EVL,SOC,FIG,LIV
+s3;Léa;PE;FIG,EVL,SOC,LIV,CON,EXT
+s4;Hugo;EN;SOC,CON,EXT,FIG,EVL,LIV
+s5;Inès;AD;EVL,CON,EXT,SOC,LIV,FIG
+
+parametres
+1500

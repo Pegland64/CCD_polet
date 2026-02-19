@@ -1,0 +1,68 @@
+articles
+a1;Jeu d'encastrement formes;SOC;BB;TB;6;150
+a2;Loto découverte bébé;SOC;BB;N;7;550
+a3;Cubes souples;CON;BB;TB;3;700
+a4;Portique bébé;EXT;BB;TB;6;500
+a5;Livre de bain;LIV;BB;TB;8;250
+a6;Tapis sensoriel;EVL;BB;B;4;400
+a7;Mega Bloks bébé;CON;BB;B;11;500
+a8;Peluche musicale chat;FIG;BB;TB;5;250
+a9;Peluche ours géant;FIG;PE;N;15;150
+a10;Mon premier verger;SOC;PE;N;14;400
+a11;Briques souples;CON;PE;N;14;650
+a12;Mon premier atlas;LIV;PE;N;10;200
+a13;Ballon sauteur;EXT;PE;B;14;550
+a14;Jeu de quilles;EXT;PE;B;11;350
+a15;Toboggan pliable;EXT;PE;TB;13;400
+a16;Jeu de laçage;EVL;PE;B;11;550
+a17;Mon premier imagier;EVL;PE;TB;6;350
+a18;Dominos couleurs;SOC;PE;N;3;250
+a19;Petit Ours Brun;LIV;PE;B;10;250
+a20;Cubes alphabet;CON;PE;TB;14;700
+a21;Perles à enfiler;EVL;PE;B;15;550
+a22;Jeu de l'oie Junior;SOC;PE;B;13;150
+a23;Plus-Plus Mini;CON;PE;TB;10;300
+a24;Cerf-volant papillon;EXT;PE;B;14;650
+a25;Trottinette 3 roues;EXT;PE;TB;5;550
+a26;Max et Lili;LIV;EN;TB;16;150
+a27;Corde à sauter;EXT;EN;TB;20;800
+a28;Geomag;CON;EN;N;12;700
+a29;Diabolo;EXT;EN;N;14;200
+a30;Journal d'un dégonflé;LIV;EN;B;10;150
+a31;Lego Ninjago;CON;EN;TB;18;600
+a32;Raquettes badminton;EXT;EN;B;11;500
+a33;Lego City caserne;CON;EN;N;17;300
+a34;Cluedo Junior;SOC;EN;TB;16;550
+a35;Le Petit Nicolas;LIV;EN;N;20;250
+a36;Cerf-volant pirate;EXT;EN;TB;19;450
+a37;Puissance 4;SOC;EN;TB;19;450
+a38;Figurine cheval;FIG;EN;N;9;350
+a39;Risk Junior;SOC;EN;TB;15;400
+a40;Chair de Poule T1;LIV;EN;B;7;350
+a41;Playmobil pirate;FIG;EN;N;11;150
+a42;Globe interactif;EVL;EN;B;6;500
+a43;Slackline;EXT;AD;N;13;500
+a44;Télescope junior;EVL;AD;TB;25;450
+a45;Lego Technic;CON;AD;TB;17;400
+a46;Maquette personnage;FIG;AD;N;16;300
+a47;Splendor;SOC;AD;TB;17;400
+a48;Manga One Piece T1;LIV;AD;TB;24;350
+a49;Manga Naruto T1;LIV;AD;N;24;350
+a50;Figurine manga;FIG;AD;N;14;200
+
+abonnes
+s1;Emma;PE;EVL,FIG,CON,EXT,LIV,SOC
+s2;Lucas;PE;CON,LIV,SOC,FIG,EVL,EXT
+s3;Chloé;PE;EVL,EXT,SOC,LIV,CON,FIG
+s4;Hugo;PE;SOC,EXT,CON,FIG,LIV,EVL
+s5;Inès;EN;LIV,EXT,SOC,FIG,CON,EVL
+s6;Léa;EN;EVL,CON,LIV,FIG,EXT,SOC
+s7;Nathan;EN;EXT,EVL,LIV,SOC,FIG,CON
+s8;Jade;EN;EXT,LIV,FIG,SOC,EVL,CON
+s9;Tom;BB;LIV,EXT,SOC,EVL,CON,FIG
+s10;Camille;BB;FIG,EVL,SOC,LIV,CON,EXT
+s11;Mathis;AD;CON,EXT,EVL,LIV,FIG,SOC
+s12;Sarah;AD;LIV,EXT,FIG,CON,EVL,SOC
+
+parametres
+1500
