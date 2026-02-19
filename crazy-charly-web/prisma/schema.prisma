@@ -46,6 +46,11 @@ enum StatutCampagne {
   VALIDEE     // Campagne validée
 }
 
+enum Role {
+  abonne
+  admin
+}
+
 // ============================================
 // MODELS
 // ============================================
@@ -70,21 +75,23 @@ model Article {
   @@map("articles")
 }
 
-model Abonne {
-  id               String     @id @default(uuid())
-  nom              String
-  prenom           String
-  email            String     @unique
-  trancheAgeEnfant TrancheAge
-  preferences      String
-  
-  // Relation avec Box
-  boxes            Box[]
-  
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+model Utilisateur {
+  id                    String   @id @default(uuid())
+  authProviderId        String   @unique @map("auth_provider_id")
+  email                 String   @unique
+  nom                   String?
+  prenom                String?
+  role                  Role     @default(abonne)
+  trancheAgeEnfant      String?  @map("tranche_age_enfant")
+  preferencesCategories String?  @map("preferences_categories")
 
-  @@map("abonnes")
+  // Relation avec Box
+  boxes                 Box[]
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("utilisateur")
 }
 
 model Campagne {
@@ -110,11 +117,11 @@ model Box {
   prixTotal  Int
   
   // Relations
-  campagneId String
-  campagne   Campagne @relation(fields: [campagneId], references: [id], onDelete: Cascade)
-  
-  abonneId   String
-  abonne     Abonne   @relation(fields: [abonneId], references: [id], onDelete: Cascade)
+  campagneId    String
+  campagne      Campagne    @relation(fields: [campagneId], references: [id], onDelete: Cascade)
+
+  utilisateurId String
+  utilisateur   Utilisateur @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
   
   articles   Article[]
   

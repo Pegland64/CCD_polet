@@ -10,18 +10,18 @@ export async function GET(
     const { email: rawEmail } = await params;
     const email = decodeURIComponent(rawEmail);
 
-    const abonne = await prisma.abonne.findUnique({
+    const utilisateur = await prisma.utilisateur.findUnique({
       where: { email },
     });
 
-    if (!abonne) {
-      return NextResponse.json({ error: 'Abonné introuvable' }, { status: 404 });
+    if (!utilisateur) {
+      return NextResponse.json({ error: 'Utilisateur introuvable' }, { status: 404 });
     }
 
     // Seules les boxes des campagnes VALIDÉES sont visibles
     const boxes = await prisma.box.findMany({
       where: {
-        abonneId: abonne.id,
+        utilisateurId: utilisateur.id,
         campagne: { statut: 'VALIDEE' },
       },
       include: {
@@ -44,11 +44,11 @@ export async function GET(
     });
 
     return NextResponse.json({
-      abonne: {
-        nom: abonne.nom,
-        prenom: abonne.prenom,
-        email: abonne.email,
-        trancheAgeEnfant: abonne.trancheAgeEnfant,
+      utilisateur: {
+        nom: utilisateur.nom,
+        prenom: utilisateur.prenom,
+        email: utilisateur.email,
+        trancheAgeEnfant: utilisateur.trancheAgeEnfant,
       },
       boxes,
     });
