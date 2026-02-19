@@ -23,12 +23,12 @@ function afficherBoxes(abonnes: Abonne[]): void {
         scoreTotal += score;
 
         if (box.articles.length === 0) {
-            console.log(`\n📦 ${abonne.prenom.padEnd(15)} — box vide`);
+            console.log(`\n[BOX] ${abonne.prenom.padEnd(15)} — box vide`);
             continue;
         }
 
         console.log(
-            `\n📦 ${abonne.prenom.padEnd(15)} | score: ${score} | ` +
+            `\n[BOX] ${abonne.prenom.padEnd(15)} | score: ${score} | ` +
             `poids: ${box.getPoidsTotal()}g | prix: ${box.getPrixTotal()}€ | ` +
             `${box.articles.length} article(s)`
         );
@@ -50,20 +50,28 @@ const POLLING_INTERVAL_MS = 10000; // 10 secondes
 
 async function runOptimizationCycle() {
     try {
-        console.log('🔄 Vérification des campagnes et nouveaux inscrits...');
+        console.log('Vérification des campagnes et nouveaux inscrits...');
 
         // 1. Récupération de la campagne en cours
         const campagne = await getCampagneEnBrouillon();
         if (!campagne) {
-            console.log('zzz Aucune campagne BROUILLON. En attente...');
+            console.log('Aucune campagne BROUILLON. En attente...');
             return;
         }
         const poidsMax = campagne.poidsMax || POIDS_MAX_DEFAUT;
 
         // 2. Récupération des articles DISPONIBLES
         const articles = await getArticles();
+        const tousAbonnes = await getAbonnes();
+        console.log(`\n[DEBUG] ${tousAbonnes.length} abonnés totaux dans la base :`);
+        tousAbonnes.forEach(a => console.log(`   - [${a.id}] ${a.prenom} (${a.ageEnfant}, ${a.preferences.join(',')})`));
+
+        console.log(`[DEBUG] ${articles.length} articles DISPONIBLES :`);
+        articles.forEach(a => console.log(`   - [${a.id}] ${a.designation} (${a.categorie}, ${a.age}, ${a.prix}€)`));
+
+
         if (articles.length === 0) {
-            console.log('zzz Aucun article disponible. En attente...');
+            console.log('Aucun article disponible. En attente...');
             return;
         }
 
@@ -95,11 +103,11 @@ async function runOptimizationCycle() {
         }
 
         if (abonnesSansBox.length === 0) {
-            console.log('zzz Tous les abonnés de la campagne ont déjà une box. En attente de nouveaux inscrits...');
+            console.log('Tous les abonnés de la campagne ont déjà une box. En attente de nouveaux inscrits...');
             return;
         }
 
-        console.log(`🚀 ${abonnesSansBox.length} nouveau(x) abonné(s) à traiter pour la campagne ${campagne.nom}...`);
+        console.log(`${abonnesSansBox.length} nouveau(x) abonné(s) à traiter pour la campagne ${campagne.nom}...`);
 
         // 4. Algorithme glouton
         glouton(abonnesSansBox, articles, poidsMax);
@@ -111,11 +119,11 @@ async function runOptimizationCycle() {
         afficherBoxes(abonnesSansBox);
 
     } catch (err) {
-        console.error('❌ Erreur dans le cycle d\'optimisation:', err);
+        console.error('Erreur dans le cycle d\'optimisation:', err);
     }
 }
 
 // Lancement du polling
-console.log(`🚀 Service d'optimisation démarré (Polling tous les ${POLLING_INTERVAL_MS / 1000}s)`);
+console.log(`Service d'optimisation démarré (Polling tous les ${POLLING_INTERVAL_MS / 1000}s)`);
 setInterval(runOptimizationCycle, POLLING_INTERVAL_MS);
 runOptimizationCycle(); // Premier lancement immédiat
