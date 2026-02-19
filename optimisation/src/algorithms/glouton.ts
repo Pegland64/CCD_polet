@@ -2,7 +2,7 @@ import {Article} from "../models/Article";
 import {Abonne} from "../models/Abonne";
 import {peutAjouter} from "../core/validator";
 import {getScoreArticle} from "../core/scoring";
-
+console.log("GLLOUTON LOADED");
 export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): Abonne[] {
     const remaining = [...articles]; // Copie de la liste des articles
     while(true){
