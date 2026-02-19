@@ -1,11 +1,12 @@
-CREATE TABLE IF NOT EXISTS articles (
-    id_article INT AUTO_INCREMENT PRIMARY KEY,
-    nom_article VARCHAR(150) NOT NULL,
-    categorie VARCHAR(100) NOT NULL,
-    tranche_age VARCHAR(50) NOT NULL,
-    etat VARCHAR(50) NOT NULL,
-    prix DECIMAL(10,2) NOT NULL,
-    poids INT NOT NULL
+CREATE TABLE utilisateur (
+                             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                             auth_provider_id VARCHAR(255) UNIQUE NOT NULL,
+                             email VARCHAR(255) UNIQUE NOT NULL,
+                             nom VARCHAR(100),
+                             prenom VARCHAR(100),
+                             role VARCHAR(20) DEFAULT 'abonne',
+                             tranche_age_enfant VARCHAR(2),
+                             preferences_categories VARCHAR(255)
 );
 
 INSERT INTO articles 

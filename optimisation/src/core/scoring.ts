@@ -1,6 +1,6 @@
 import { Abonne } from '../models/Abonne';
 import { Article } from '../models/Article';
-import { Categorie, Etat } from '../models/types';
+import { Categorie, Etat, TrancheAge } from '../models/types';
 
 /**
  * Table de correspondance rang de préférence → points (Règle 4)
@@ -12,6 +12,27 @@ const POINTS_PAR_RANG: number[] = [10, 8, 6, 4, 2, 1];
  * Bonus par état (Règle 5)
  */
 const BONUS_ETAT: Record<Etat, number> = { N: 2, TB: 1, B: 0 };
+
+const AGE_TRANCHES: TrancheAge[] = ["BB", "PE", "EN", "AD"];
+
+/**
+ * Retourne le facteur de pénalité d'âge entre un article et un abonné.
+ * - même tranche → 1 (score normal)
+ * - tranche adjacente → 0.5 (score réduit de moitié, min 1)
+ * - non adjacent → null (incompatible)
+ */
+function getAgePenaltyFactor(articleAge: TrancheAge, abonneAge: TrancheAge): number | null {
+    const idxArticle = AGE_TRANCHES.indexOf(articleAge);
+    const idxAbonne = AGE_TRANCHES.indexOf(abonneAge);
+
+    if (idxArticle === -1 || idxAbonne === -1) return null;
+
+    const diff = Math.abs(idxArticle - idxAbonne);
+
+    if (diff === 0) return 1;    // même tranche → score normal
+    if (diff === 1) return 0.5;  // tranche adjacente → score réduit de moitié
+    return null;                 // non adjacent → incompatible
+}
 
 /**
  * Retourne les points de préférence d'un article pour un abonné (Règle 4 uniquement).
@@ -32,18 +53,26 @@ export function getBonusEtat(article: Article): number {
 }
 
 /**
- * Retourne le score d'un article avec dégressivité (Règles 4 + 5 + 6).
+ * Retourne le score d'un article avec dégressivité (Règles 4 + 5 + 6 + compatibilité âge élargie).
  * @param dejaMemeCategorie Nombre d'articles de la même catégorie déjà dans la box (0 = premier)
+ * Retourne null si l'article est incompatible avec l'abonné (tranches non adjacentes).
  */
-export function getScoreArticle(abonne: Abonne, article: Article, dejaMemeCategorie: number = 0): number {
+export function getScoreArticle(abonne: Abonne, article: Article, dejaMemeCategorie: number = 0): number | null {
+    const factor = getAgePenaltyFactor(article.age, abonne.ageEnfant);
+    if (factor === null) return null; // incompatible
+
     const rang = abonne.preferences.indexOf(article.categorie);
     const rangEffectif = rang === -1 ? 6 : rang + dejaMemeCategorie; // décalage Règle 6
-    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;          // au-delà du 6ème → 1 pt
-    return pointsPref + getBonusEtat(article);
+    const pointsPref = POINTS_PAR_RANG[rangEffectif] ?? 1;           // au-delà du 6ème → 1 pt
+    const bonusEtat = getBonusEtat(article);
+
+    // Appliquer la pénalité d'âge sur les points de préférence uniquement (arrondi supérieur, min 1)
+    const pointsPrefAjustes = Math.max(1, Math.ceil(pointsPref * factor));
+    return pointsPrefAjustes + bonusEtat;
 }
 
 /**
- * Calcule le score d'une box individuelle (Règles 4 + 5 + 6).
+ * Calcule le score d'une box individuelle (Règles 4 + 5 + 6 + compatibilité âge élargie).
  */
 export function calculerScoreBox(abonne: Abonne): number {
     let score = 0;
@@ -51,7 +80,8 @@ export function calculerScoreBox(abonne: Abonne): number {
 
     for (const article of abonne.box.articles) {
         const n = countCat[article.categorie] ?? 0;
-        score += getScoreArticle(abonne, article, n);
+        const s = getScoreArticle(abonne, article, n);
+        if (s !== null) score += s;  // articles incompatibles (ne devraient pas être là) ignorés
         countCat[article.categorie] = n + 1;
     }
     return score;
@@ -106,3 +136,5 @@ export function calculerScoreTotal(abonnes: Abonne[]): number {
     scoreTotal += calculerMalusEquite(abonnes);     // Règle 8
     return scoreTotal;
 }
+
+
