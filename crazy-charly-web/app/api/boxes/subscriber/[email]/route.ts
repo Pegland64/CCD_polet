@@ -4,10 +4,11 @@ import { prisma } from '@/lib/prisma';
 // GET /api/boxes/subscriber/[email] — Consultation de la box VALIDÉE d'un abonné
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { email: string } }
+  { params }: { params: Promise<{ email: string }> }
 ) {
   try {
-    const email = decodeURIComponent(params.email);
+    const { email: rawEmail } = await params;
+    const email = decodeURIComponent(rawEmail);
 
     const abonne = await prisma.abonne.findUnique({
       where: { email },

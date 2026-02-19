@@ -1,0 +1,41 @@
+meta {
+  name: GET Box d'un abonné
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/boxes/subscriber/alice.dupont@example.com
+  body: none
+  auth: none
+}
+
+docs {
+  Permet à un abonné de consulter sa box en saisissant son email.
+  Seules les boxes des campagnes VALIDÉES sont visibles.
+
+  Remplace l'email dans l'URL par celui de l'abonné.
+  Si l'email contient des caractères spéciaux (@, .), ils sont gérés automatiquement.
+
+  Réponse :
+  {
+    "abonne": {
+      "nom": "Dupont",
+      "prenom": "Alice",
+      "email": "alice.dupont@example.com",
+      "trancheAgeEnfant": "PE"
+    },
+    "boxes": [
+      {
+        "id": "uuid",
+        "score": 28,
+        "poidsTotal": 1000,
+        "prixTotal": 17,
+        "campagne": { "id": "uuid", "nom": "Campagne Test 2026", "createdAt": "..." },
+        "articles": [ ... ]
+      }
+    ]
+  }
+
+  Note : boxes sera vide [] si aucune campagne n'est encore VALIDÉE.
+}

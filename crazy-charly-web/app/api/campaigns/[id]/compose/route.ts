@@ -36,11 +36,12 @@ function genererCSV(
 // POST /api/campaigns/[id]/compose — Génère le CSV et l'envoie au service d'optimisation
 export async function POST(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const campagne = await prisma.campagne.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!campagne) {
@@ -82,7 +83,7 @@ export async function POST(
       status: 200,
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': `attachment; filename="campagne-${params.id}.csv"`,
+        'Content-Disposition': `attachment; filename="campagne-${id}.csv"`,
       },
     });
   } catch (error) {

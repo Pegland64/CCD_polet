@@ -1,0 +1,36 @@
+meta {
+  name: POST Inscrire un abonné
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/subscribers
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nom": "Durand",
+    "prenom": "Clara",
+    "email": "clara.durand@test.fr",
+    "trancheAgeEnfant": "PE",
+    "preferences": ["EVL", "LIV", "FIG", "SOC", "CON", "EXT"]
+  }
+}
+
+docs {
+  Inscrit un nouvel abonné.
+
+  Champs obligatoires :
+  - nom              : string
+  - prenom           : string
+  - email            : string unique
+  - trancheAgeEnfant : BB | PE | EN | AD
+  - preferences      : tableau des 6 catégories ordonnées du plus au moins souhaité
+                       Ex: ["SOC","FIG","EVL","CON","LIV","EXT"]
+
+  Erreur 409 si l'email est déjà utilisé.
+  Réponse 201 : l'abonné créé avec son id UUID.
+}

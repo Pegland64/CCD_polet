@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma';
 // GET /api/campaigns/[id]/boxes — Affichage des box composées d'une campagne (admin)
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const campagne = await prisma.campagne.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!campagne) {
@@ -16,7 +17,7 @@ export async function GET(
     }
 
     const boxes = await prisma.box.findMany({
-      where: { campagneId: params.id },
+      where: { campagneId: id },
       include: {
         abonne: {
           select: { id: true, nom: true, prenom: true, email: true, trancheAgeEnfant: true },

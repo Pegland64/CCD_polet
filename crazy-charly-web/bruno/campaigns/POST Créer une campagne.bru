@@ -1,0 +1,31 @@
+meta {
+  name: POST Créer une campagne
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/campaigns
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nom": "Campagne Mars 2026",
+    "poidsMax": 1200
+  }
+}
+
+docs {
+  Crée une nouvelle campagne (admin).
+
+  Champs obligatoires :
+  - nom      : string — nom de la campagne
+  - poidsMax : entier (grammes) — poids maximum par box
+
+  La campagne est créée avec le statut BROUILLON.
+  Réponse 201 : la campagne créée avec son id UUID.
+
+  ⚠️ Copie l'id retourné pour l'utiliser dans les routes suivantes.
+}
