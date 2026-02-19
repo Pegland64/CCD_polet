@@ -1,4 +1,5 @@
 import { parseCSV } from './io/csvParser';
+import { poc } from './io/poc';
 import { glouton } from './algorithms/glouton';
 import { calculerScoreTotal, calculerScoreBox } from './core/scoring';
 import { writeCSV } from './io/csvWriter';
@@ -28,6 +29,11 @@ for (const abonne of result) {
 }
 
 console.log(`\n=== SCORE GLOBAL : ${calculerScoreTotal(result)} pts ===`);
+
+console.log('\n=== APPEL POC ===');
+// Appel io/poc.ts pour tester le code
+poc(abonnes, articles, budgetMax);
+
 
 // Écriture du CSV de sortie
 writeCSV(result, '../output_csv/01_exemple/resultat.csv');
