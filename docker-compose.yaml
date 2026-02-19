@@ -41,8 +41,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    volumes:
-      - db-data:/var/lib/postgresql/data
 
   crazy-charly-web:
     platform: linux/amd64
@@ -82,6 +80,7 @@ volumes:
   crazy-charly-web-node-modules:
   crazy-charly-next:
   db-data:
+
 
 secrets:
   db_root_password:

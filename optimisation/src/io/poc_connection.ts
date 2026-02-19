@@ -76,6 +76,27 @@ export async function getArticles(): Promise<Article[]> {
     }
 }
 
+export async function getCampagneEnBrouillon(): Promise<{ id: string, nom: string, poidsMax: number } | null> {
+    const client = await pool.connect();
+    try {
+        const res = await client.query(
+            `SELECT id, nom, "poidsMax"
+             FROM campagnes
+             WHERE statut = 'BROUILLON'
+             ORDER BY "createdAt" DESC
+             LIMIT 1`
+        );
+        if (res.rows.length === 0) return null;
+        return {
+            id: res.rows[0].id,
+            nom: res.rows[0].nom,
+            poidsMax: Number(res.rows[0].poidsMax),
+        };
+    } finally {
+        client.release();
+    }
+}
+
 
 async function main() {
     try {
