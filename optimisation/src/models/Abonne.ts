@@ -2,7 +2,7 @@ import {Article} from "./Article";
 import {Categorie, TrancheAge} from "./types";
 import { Box } from './Box';
 
-class Abonne {
+export class Abonne {
     public box: Box;
     constructor(
         public readonly id: string,             // ex: "s1" [cite: 192]

@@ -1,7 +1,5 @@
 import {Article} from "./Article";
-
-class Abonne {
-}
+import {Abonne} from "./Abonne";
 
 export class Box {
     public articles: Article[] = [];
