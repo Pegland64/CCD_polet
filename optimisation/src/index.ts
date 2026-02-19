@@ -6,7 +6,7 @@ import { writeCSV } from './io/csvWriter';
 
 const POIDS_MAX = 1000;
 
-const { articles, abonnes, budgetMax } = parseCSV('../input_csv/01_exemple/exemple.csv');
+const { articles, abonnes, budgetMax } = parseCSV('../../input_csv/01_exemple/exemple.csv');
 
 console.log('=== DONNÉES CHARGÉES ===');
 console.log(`${articles.length} articles | ${abonnes.length} abonnés | Budget max : ${budgetMax}€\n`);
@@ -32,7 +32,7 @@ console.log(`\n=== SCORE GLOBAL : ${calculerScoreTotal(result)} pts ===`);
 
 console.log('\n=== APPEL POC ===');
 // Appel io/poc.ts pour tester le code
-poc(abonnes, articles, budgetMax);
+//poc(abonnes, articles, budgetMax);
 
 
 // Écriture du CSV de sortie
