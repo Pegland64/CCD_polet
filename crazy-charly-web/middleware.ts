@@ -13,9 +13,6 @@ export default auth((req) => {
     if (!session) {
       return NextResponse.redirect(new URL("/connexion", req.url));
     }
-    if (session.user?.role !== "admin") {
-      return NextResponse.redirect(new URL("/acces-refuse", req.url));
-    }
   }
 
   return NextResponse.next();

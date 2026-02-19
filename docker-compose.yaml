@@ -34,6 +34,8 @@ services:
       - db_name
     networks:
       - crazy-charly.net
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U app_user -d crazy_charly_db" ]
       interval: 5s
@@ -69,14 +71,15 @@ services:
       - db_user
       - db_password
       - db_name
-
 networks:
   crazy-charly.net:
     driver: bridge
 
 volumes:
+  postgres-data:
   crazy-charly-web-node-modules:
   crazy-charly-next:
+  db-data:
 
 
 secrets:

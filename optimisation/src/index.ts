@@ -1,134 +1,129 @@
-import { pool } from './io/poc_connection';
+import { getAbonnes, getArticles, getCampagneEnBrouillon, pool } from './io/poc_connection';
 import { glouton } from './algorithms/glouton';
-import { calculerScoreTotal, calculerScoreBox } from './core/scoring';
-import { Article } from './models/Article';
+import { calculerScoreBox } from './core/scoring';
+import { saveBoxesToDB } from './io/dbWriter';
 import { Abonne } from './models/Abonne';
-import { Categorie, TrancheAge, Etat } from './models/types';
 
-// URL de l'API web pour envoyer les résultats
-const API_URL = process.env.API_URL || 'http://crazy-charly-web:3000/api/boxes';
+// ─── Paramètres ────────────────────────────────────────────────────────────
+const POIDS_MAX_DEFAUT = 2000; // utilisé si la campagne ne définit pas de poidsMax
 
-// Fonction principale asynchrone pour gérer la connexion BD et l'API
-async function main() {
-    let client;
+/**
+ * Affiche dans la console le contenu de chaque box composée.
+ */
+function afficherBoxes(abonnes: Abonne[]): void {
+    console.log('\n════════════════════════════════════════════════');
+    console.log('  RÉSULTAT DES BOXES');
+    console.log('════════════════════════════════════════════════');
+
+    let scoreTotal = 0;
+
+    for (const abonne of abonnes) {
+        const box = abonne.box;
+        const score = calculerScoreBox(abonne);
+        scoreTotal += score;
+
+        if (box.articles.length === 0) {
+            console.log(`\n[BOX] ${abonne.prenom.padEnd(15)} — box vide`);
+            continue;
+        }
+
+        console.log(
+            `\n[BOX] ${abonne.prenom.padEnd(15)} | score: ${score} | ` +
+            `poids: ${box.getPoidsTotal()}g | prix: ${box.getPrixTotal()}€ | ` +
+            `${box.articles.length} article(s)`
+        );
+
+        for (const art of box.articles) {
+            console.log(
+                `     • [${art.id}] ${art.designation.padEnd(25)} ` +
+                `${art.categorie} | ${art.age} | ${art.etat} | ${art.prix}€ | ${art.poids}g`
+            );
+        }
+    }
+
+    console.log('\n════════════════════════════════════════════════');
+    console.log(`  SCORE TOTAL : ${scoreTotal}`);
+    console.log('════════════════════════════════════════════════\n');
+}
+
+const POLLING_INTERVAL_MS = 10000; // 10 secondes
+
+async function runOptimizationCycle() {
     try {
-        console.log('=== DÉMARRAGE DU TRAITEMENT ===');
+        console.log('Vérification des campagnes et nouveaux inscrits...');
 
-        // 1. Connexion à la BD
-        client = await pool.connect();
-        console.log('Connecté à la base de données via Pool PG.');
-
-        // 2. Récupérer la campagne en statut BROUILLON
-        const resCampagne = await client.query("SELECT * FROM campagnes WHERE statut = 'BROUILLON' ORDER BY \"createdAt\" DESC LIMIT 1");
-        if (resCampagne.rows.length === 0) {
-            console.log('Aucune campagne en statut BROUILLON trouvée. Arrêt du traitement.');
+        // 1. Récupération de la campagne en cours
+        const campagne = await getCampagneEnBrouillon();
+        if (!campagne) {
+            console.log('Aucune campagne BROUILLON. En attente...');
             return;
         }
-        const campagne = resCampagne.rows[0];
-        console.log(`Campagne trouvée : ${campagne.nom} (ID: ${campagne.id}, Poids Max: ${campagne.poidsMax}g)`);
+        const poidsMax = campagne.poidsMax || POIDS_MAX_DEFAUT;
 
-        // 3. Récupérer les articles DISPONIBLES
-        const resArticles = await client.query(
-            "SELECT * FROM articles WHERE statut = 'DISPONIBLE'"
-        );
-        const articles = resArticles.rows.map((row: any) => new Article(
-            row.id,
-            row.designation,
-            row.categorie as Categorie,
-            row.trancheAge as TrancheAge,
-            row.etat as Etat,
-            row.prix,
-            row.poids
-        ));
-        console.log(`${articles.length} articles disponibles récupérés.`);
+        // 2. Récupération des articles DISPONIBLES
+        const articles = await getArticles();
+        const tousAbonnes = await getAbonnes();
+        console.log(`\n[DEBUG] ${tousAbonnes.length} abonnés totaux dans la base :`);
+        tousAbonnes.forEach(a => console.log(`   - [${a.id}] ${a.prenom} (${a.ageEnfant}, ${a.preferences.join(',')})`));
+
+        console.log(`[DEBUG] ${articles.length} articles DISPONIBLES :`);
+        articles.forEach(a => console.log(`   - [${a.id}] ${a.designation} (${a.categorie}, ${a.age}, ${a.prix}€)`));
+
 
         if (articles.length === 0) {
-            console.log('Aucun article disponible. Arrêt.');
+            console.log('Aucun article disponible. En attente...');
             return;
         }
 
-        // 4. Récupérer les utilisateurs (abonnés)
-        // On ne prend que ceux qui ont des préférences définies ?
-        // Pour l'instant, on prend tous les utilisateurs avec le rôle 'abonne' (par défaut)
-        // La structure de la table est 'utilisateur' avec 'role' enum
-        const resUsers = await client.query(
-            "SELECT * FROM utilisateur WHERE role = 'abonne'"
-        );
+        // 3. Récupération des abonnés SANS box pour cette campagne
+        // (Note: getAbonnes() retourne tous les abonnés. Idéalement il faudrait filtrer ceux qui ont déjà une box dans cette campagne)
+        // Pour l'instant, on récupère tout, mais on pourrait optimiser la requête SQL.
+        // Simplification: On refait le calcul pour tout le monde ou on filtre ?
+        // LE MIEUX : Modifier getAbonnes pour ne prendre que ceux qui n'ont PAS de box dans la campagne actuelle.
 
-        const abonnes = resUsers.rows.map((row: any) => {
-            // preferencesCategories est une chaine "CAT1,CAT2"
-            const prefs = row.preferencesCategories
-                ? row.preferencesCategories.split(',').map((p: string) => p.trim() as Categorie)
-                : [];
+        // Pour ce POC : on récupère tous les abonnés.
+        // MAIS ATTENTION : saveBoxesToDB va créer des doublons si on ne vérifie pas.
+        // IL FAUT filtrer les abonnés déjà traités.
 
-            return new Abonne(
-                row.id,
-                row.prenom || 'Sans Nom',
-                (row.trancheAgeEnfant as TrancheAge) || 'PE', // Valeur par défaut si null
-                prefs
+        const client = await pool.connect();
+        let abonnesSansBox: Abonne[] = [];
+        try {
+            // Récupérer les ID des utilisateurs qui ont déjà une box dans cette campagne
+            const resDejaTraites = await client.query(
+                'SELECT "utilisateurId" FROM boxes WHERE "campagneId" = $1',
+                [campagne.id]
             );
-        });
-        console.log(`${abonnes.length} abonnés récupérés.`);
+            const dejaTraites = new Set(resDejaTraites.rows.map((r: any) => r.utilisateurId));
 
-        if (abonnes.length === 0) {
-            console.log('Aucun abonné trouvé. Arrêt.');
+            const tousAbonnes = await getAbonnes();
+            abonnesSansBox = tousAbonnes.filter(a => !dejaTraites.has(a.id));
+
+        } finally {
+            client.release();
+        }
+
+        if (abonnesSansBox.length === 0) {
+            console.log('Tous les abonnés de la campagne ont déjà une box. En attente de nouveaux inscrits...');
             return;
         }
 
-        // 5. Lancer l'algorithme Glouton
-        console.log('Lancement de l\'algorithme glouton...');
-        const result = glouton(abonnes, articles, campagne.poidsMax);
+        console.log(`${abonnesSansBox.length} nouveau(x) abonné(s) à traiter pour la campagne ${campagne.nom}...`);
 
-        const scoreTotal = calculerScoreTotal(result);
-        console.log(`=== RÉSULTATS GLOUTON ===`);
-        console.log(`Score Global : ${scoreTotal} pts`);
-        console.log(`${result.length} box générées.`);
+        // 4. Algorithme glouton
+        glouton(abonnesSansBox, articles, poidsMax);
 
-        // 6. Préparer le payload pour l'API
-        const boxesPayload = result.map(abonne => {
-            const box = abonne.box;
-            return {
-                utilisateurId: abonne.id,
-                articleIds: box.articles.map(a => a.id),
-                score: calculerScoreBox(abonne),
-                prixTotal: box.getPrixTotal(),
-                poidsTotal: box.getPoidsTotal()
-            };
-        });
+        // 5. Enregistrement
+        await saveBoxesToDB(abonnesSansBox, campagne.id, pool);
 
-        // 7. Envoyer les résultats à l'API
-        if (boxesPayload.length > 0) {
-            console.log(`Envoi de ${boxesPayload.length} box à l'API ${API_URL}...`);
-
-            const apiResponse = await fetch(`${API_URL}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    campagneId: campagne.id,
-                    boxes: boxesPayload
-                })
-            });
-
-            if (apiResponse.ok) {
-                const json = await apiResponse.json();
-                console.log('Succès de l\'envoi API:', json);
-            } else {
-                const errText = await apiResponse.text();
-                console.error('Erreur lors de l\'envoi API:', apiResponse.status, errText);
-            }
-        } else {
-            console.log('Aucune box à envoyer.');
-        }
+        // 6. Affichage (optionnel)
+        afficherBoxes(abonnesSansBox);
 
     } catch (err) {
-        console.error("Erreur critique dans le script d'optimisation:", err);
-    } finally {
-        if (client) client.release();
-        await pool.end(); // Fermer le pool à la fin du script
+        console.error('Erreur dans le cycle d\'optimisation:', err);
     }
 }
 
-// Exécuter la fonction principale
-main();
+// Lancement du polling
+console.log(`Service d'optimisation démarré (Polling tous les ${POLLING_INTERVAL_MS / 1000}s)`);
+setInterval(runOptimizationCycle, POLLING_INTERVAL_MS);
+runOptimizationCycle(); // Premier lancement immédiat

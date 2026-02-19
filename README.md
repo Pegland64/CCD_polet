@@ -1,10 +1,3 @@
-Chailan Cyprian
-Haution Ilan
-Lounici Ilyes
-Thiriet Esteban
-Defolie Julien
-Noel Julien
-
 # Dépôt du projet de l'équipe Vieux Poulet
 
 ## Liste des membres
