@@ -1,7 +1,7 @@
 import {Article} from "../models/Article";
 import {Abonne} from "../models/Abonne";
 import {peutAjouter} from "../core/validator";
-import {getPointsPreference} from "../core/scoring";
+import {getScoreArticle} from "../core/scoring";
 
 export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): Abonne[] {
     const remaining = [...articles]; // Copie de la liste des articles
@@ -16,7 +16,7 @@ export function glouton(abonnes: Abonne[], articles: Article[], wmax: number): A
                 //ici mettre les vérifications
                 if (!peutAjouter(ab, art, wmax)) continue;
                 //ici mettre le gain
-                const gain = getPointsPreference(ab, art);
+                const gain = getScoreArticle(ab, art);
 
                 if(!bestMove || gain > bestMove.gain){
                     bestMove = { abIndex: j, artIndex: i, gain };
