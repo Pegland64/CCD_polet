@@ -1,4 +1,4 @@
-Traitement effectué le 2026-02-19 11:49:03
+Traitement effectué le 2026-02-19 11:55:23
 --------------------------------------------------
 
 --- Contenu de input1.csv ---
